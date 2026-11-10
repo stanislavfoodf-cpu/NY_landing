@@ -314,3 +314,8 @@ footer div{flex-wrap:wrap}
 .page-loader__content{width:min(80vw,440px);text-align:center;font-family:Source,sans-serif}
 .page-loader p{margin:12px 0 0;font-size:clamp(16px,2vw,22px);color:#e3e8f5}
 .page-loader button{margin-top:18px;padding:10px 24px;border:1px solid white;border-radius:40px;background:transparent;color:white}
+
+/* Success styling is activated only after the letter service confirms storage. */
+.letter-card--sent{display:flex;flex-direction:column;justify-content:center;align-items:center;background:linear-gradient(160deg,#6873bc,#4955a0);box-shadow:0 0 18px #a5b5f066;border:1px solid #b9c6ee}
+.letter-card--sent h2{line-height:1.05}
+.letter-card--sent p{margin:24px 0 0;line-height:1.3}
