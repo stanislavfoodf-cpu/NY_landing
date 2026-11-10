@@ -18,7 +18,7 @@ if (frame1.equals(frame2)) issues.push({ scenario: 'house animation', errors: ['
 await motionPage.emulateMedia({ reducedMotion: 'reduce' });
 if (await animatedHouse.isVisible()) issues.push({ scenario: 'reduced motion', errors: ['animated layer remains visible'] });
 await motionPage.close();
-for (const width of [375, 768, 1440, 1920]) {
+for (const width of [375, 768, 1440, 1920, 2560]) {
   const page = await browser.newPage({ viewport: { width, height: width < 800 ? 812 : 1080 } });
   const errors = [];
   page.on('console', message => {
@@ -43,11 +43,13 @@ for (const width of [375, 768, 1440, 1920]) {
   if (garlandLayout.square>1 || !garlandLayout.buttonContained || Math.abs(garlandLayout.widthRatio-1.307)>.02 || Math.abs(garlandLayout.leftRatio+.098)>.02 || Math.abs(garlandLayout.topRatio+.135)>.02) errors.push(`garland alignment: ${JSON.stringify(garlandLayout)}`);
   if (await page.locator('.window').count() !== 14) errors.push('expected 14 window buttons');
   const windowAlignment = await page.locator('.house').evaluate(house => {
-    const h=house.getBoundingClientRect(), desktop=innerWidth>=1100;
-    const x=desktop?.3287:.3887, y=desktop?.2606:.3638, w=desktop?.3413:.2215, height=desktop?.305:.2355;
-    const colStep=(1-3*.1388)/4+.1388, rowStep=(1-3*.052)/4+.052;
+    const style=getComputedStyle(document.body);
+    const [backgroundWidth,backgroundHeight]=style.backgroundSize.split(',').at(-1).trim().split(/\s+/).map(parseFloat);
+    const backgroundLeft=(innerWidth-backgroundWidth)/2;
+    const backgroundTop=parseFloat(style.backgroundPositionY.split(',').at(-1));
     const placements=[[0,0],[1,0],[2,0],[3,0],[0,1],[1,1],[2,1],[3,1],[0,2],[1,2],[3,2],[2,2],[2,3],[3,3]];
-    return [...house.querySelectorAll('.window')].every((el,i)=>{const r=el.getBoundingClientRect(), [col,row]=placements[i]; return Math.abs(r.left-(h.left+h.width*(x+w*colStep*col)))<2 && Math.abs(r.top-(h.top+h.height*(y+height*rowStep*row)))<2;});
+    // Measured outer frame bounds in the 3072 × 3278 V6 house image.
+    return [...house.querySelectorAll('.window')].every((el,i)=>{const r=el.getBoundingClientRect(), [col,row]=placements[i], x=backgroundLeft+backgroundWidth*(1194+190.6667*col)/3072, y=backgroundTop+backgroundHeight*(1190+200*row)/3278; return Math.abs(r.left-x)<3 && Math.abs(r.top-y)<3 && Math.abs(r.width-backgroundWidth*104/3072)<3 && Math.abs(r.height-backgroundHeight*165/3278)<3;});
   });
   if (!windowAlignment) errors.push('window hotspots are not aligned to facade coordinates');
   const goat = page.locator('#goat');
