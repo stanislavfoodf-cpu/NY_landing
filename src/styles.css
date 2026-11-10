@@ -319,3 +319,8 @@ footer div{flex-wrap:wrap}
 .letter-card--sent{display:flex;flex-direction:column;justify-content:center;align-items:center;background:linear-gradient(160deg,#6873bc,#4955a0);box-shadow:0 0 18px #a5b5f066;border:1px solid #b9c6ee}
 .letter-card--sent h2{line-height:1.05}
 .letter-card--sent p{margin:24px 0 0;line-height:1.3}
+
+.letter-dialog .email-field input{color:#dce1f2;-webkit-text-fill-color:#dce1f2;caret-color:#dce1f2}
+.letter-dialog .email-field input:-webkit-autofill,
+.letter-dialog .email-field input:-webkit-autofill:hover,
+.letter-dialog .email-field input:-webkit-autofill:focus{-webkit-background-clip:text;-webkit-text-fill-color:#dce1f2;caret-color:#dce1f2}
