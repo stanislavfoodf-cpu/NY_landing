@@ -303,3 +303,6 @@ footer div{flex-wrap:wrap}
 @media(min-width:1100px){
   .quiz-survey .quiz-error{color:#f5d9cb;font-size:18px!important;line-height:1.25}
 }
+
+.window.viewed::before,.window.locked::before{z-index:1;pointer-events:none;transition:background .3s}
+.window.viewed:hover::before,.window.viewed:focus-visible::before,.window.locked:hover::before,.window.locked:focus-visible::before{background:#ffcf7944}
