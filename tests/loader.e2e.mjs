@@ -28,7 +28,7 @@ try {
   const reduced = await browser.newPage({reducedMotion:'reduce'});
   await reduced.goto('http://127.0.0.1:4173', {waitUntil:'load'});
   await reduced.locator('.page-loader').waitFor({state:'hidden'});
-  assert.match(await reduced.locator('.page-loader__goat img').evaluate(img => img.currentSrc), /goat-still\.png$/);
+  assert.match(await reduced.locator('.goat-character img').evaluate(img => img.currentSrc), /goat-still\.png$/);
   await reduced.close();
   const noScript = await browser.newPage({javaScriptEnabled:false});
   await noScript.goto('http://127.0.0.1:4173', {waitUntil:'load'});
