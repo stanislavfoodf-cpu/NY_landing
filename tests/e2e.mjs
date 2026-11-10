@@ -44,8 +44,8 @@ for (const width of [375, 768, 1440, 1920]) {
   if (await page.locator('.window').count() !== 14) errors.push('expected 14 window buttons');
   const windowAlignment = await page.locator('.house').evaluate(house => {
     const h=house.getBoundingClientRect(), desktop=innerWidth>=1100;
-    const x=desktop?.3297:.3892, y=desktop?.2695:.3706, w=desktop?.341:.221, height=desktop?.2974:.2296;
-    const colStep=(1-3*.125)/4+.125, rowStep=(1-3*.05)/4+.05;
+    const x=desktop?.3287:.3887, y=desktop?.2606:.3638, w=desktop?.3413:.2215, height=desktop?.305:.2355;
+    const colStep=(1-3*.1388)/4+.1388, rowStep=(1-3*.052)/4+.052;
     const placements=[[0,0],[1,0],[2,0],[3,0],[0,1],[1,1],[2,1],[3,1],[0,2],[1,2],[3,2],[2,2],[2,3],[3,3]];
     return [...house.querySelectorAll('.window')].every((el,i)=>{const r=el.getBoundingClientRect(), [col,row]=placements[i]; return Math.abs(r.left-(h.left+h.width*(x+w*colStep*col)))<2 && Math.abs(r.top-(h.top+h.height*(y+height*rowStep*row)))<2;});
   });
@@ -73,7 +73,7 @@ await page.screenshot({ path: 'artifacts/screenshots/story-375.png', fullPage: t
 await page.keyboard.press('Escape');
 if (!(await firstWindow.evaluate(element => element === document.activeElement))) issues.push({ scenario: 'story', errors: ['focus was not returned'] });
 const viewedAppearance = await firstWindow.evaluate(el=>({viewed:el.classList.contains('viewed'),image:getComputedStyle(el,'::after').backgroundImage}));
-if (!viewedAppearance.viewed || !viewedAppearance.image.includes('open-window-variants.svg#window1')) issues.push({ scenario: 'story', errors: ['viewed window image is missing'] });
+if (!viewedAppearance.viewed || !viewedAppearance.image.includes('open-window-new.png')) issues.push({ scenario: 'story', errors: ['viewed window image is missing'] });
 await page.reload({ waitUntil: 'networkidle' });
 if (!(await firstWindow.evaluate(el=>el.classList.contains('viewed')))) issues.push({ scenario: 'story', errors: ['viewed state was not restored after reload'] });
 for (let i = 1; i < 4; i++) {
@@ -89,7 +89,7 @@ for (let i = 1; i < 4; i++) {
   }
   await page.getByRole('button', { name: 'Закрыть' }).click();
   const image = await window.evaluate(el => getComputedStyle(el, '::after').backgroundImage);
-  if (!image.includes(`open-window-variants.svg#window${i + 1}`)) issues.push({ scenario: 'window variants', errors: [`missing variant ${i + 1}`] });
+  if (!image.includes('open-window-new.png')) issues.push({ scenario: 'window variants', errors: [`missing variant ${i + 1}`] });
 }
 await page.getByRole('button', { name: /Окно 6:.*20 декабря/ }).click();
 await page.getByText('Здесь пока тихо.').waitFor({state:'visible'});

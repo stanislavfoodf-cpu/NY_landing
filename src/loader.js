@@ -5,11 +5,8 @@
   const retry = document.getElementById('page-loader-retry');
   const loader = document.getElementById('page-loader');
   const resources = [
-    'src/assets/figma/raw/closed-house.svg',
-    'src/assets/figma/raw/open-window-variants.svg#window1',
-    'src/assets/figma/raw/open-window-variants.svg#window2',
-    'src/assets/figma/raw/open-window-variants.svg#window3',
-    'src/assets/figma/raw/open-window-variants.svg#window4',
+    'src/assets/figma/raw/house-new.webp',
+    'src/assets/figma/raw/open-window-new.png',
     'src/assets/figma/raw/lock.png',
     'src/assets/figma/raw/story-06.jpeg',
     matchMedia('(prefers-reduced-motion: reduce)').matches ? 'src/assets/figma/raw/story-first-still.png' : 'src/assets/figma/raw/story-first.gif',

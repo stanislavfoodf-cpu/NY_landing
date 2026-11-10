@@ -24,7 +24,7 @@ const stories = [
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 const exposedFiles = new Set(['index.html', 'src/app.js', 'src/loader.js', 'src/styles.css']);
-const mime = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.svg':'image/svg+xml', '.png':'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.gif':'image/gif', '.ttf':'font/ttf', '.woff':'font/woff', '.woff2':'font/woff2' };
+const mime = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.svg':'image/svg+xml', '.png':'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.gif':'image/gif', '.webp':'image/webp', '.ttf':'font/ttf', '.woff':'font/woff', '.woff2':'font/woff2' };
 const moscowDate = (date) => new Intl.DateTimeFormat('en-CA', {timeZone:'Europe/Moscow', year:'numeric', month:'2-digit', day:'2-digit'}).format(date);
 const available = (story, date) => !story[3] || moscowDate(date) >= story[3];
 
