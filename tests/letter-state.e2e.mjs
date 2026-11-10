@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';
 import { chromium } from '/Users/stas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';
+const baseUrl = process.env.TEST_BASE_URL || 'http://127.0.0.1:4173';
 const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
 try {
   for (const width of [375,768,1440,1920]) {
     const page=await browser.newPage({viewport:{width,height:900}});
-    await page.goto('http://127.0.0.1:4173',{waitUntil:'networkidle',timeout:60000});
+    await page.goto(baseUrl,{waitUntil:'networkidle',timeout:60000});
     await page.locator('.cards .letter-open').click();
     await page.getByLabel('Ваш email').fill('test@example.com');
     await page.getByLabel('Ваше письмо').fill('Письмо в будущее');

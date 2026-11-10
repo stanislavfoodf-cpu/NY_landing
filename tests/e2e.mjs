@@ -1,13 +1,14 @@
 import { chromium } from '/Users/stas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';
 import { mkdir } from 'node:fs/promises';
 
+const baseUrl = process.env.TEST_BASE_URL || 'http://127.0.0.1:4173';
 const browser = await chromium.launch({
   headless: true,
   executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
 });
 const issues = [];
 const motionPage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
-await motionPage.goto('http://127.0.0.1:4173', { waitUntil: 'networkidle' });
+await motionPage.goto(baseUrl, { waitUntil: 'networkidle' });
 const animatedHouse = motionPage.locator('.house-animation');
 if (!(await animatedHouse.isVisible())) issues.push({ scenario: 'house animation', errors: ['animated layer is hidden'] });
 const frame1 = await animatedHouse.screenshot();
@@ -25,7 +26,7 @@ for (const width of [375, 768, 1440, 1920]) {
   });
   page.on('pageerror', error => errors.push(`pageerror: ${error.message}`));
   page.on('requestfailed', request => errors.push(`request: ${request.url()} ${request.failure()?.errorText ?? ''}`));
-  await page.goto('http://127.0.0.1:4173', { waitUntil: 'networkidle' });
+  await page.goto(baseUrl, { waitUntil: 'networkidle' });
   await page.evaluate(() => document.fonts.ready);
   const fontStatus = await page.evaluate(async () => {
     await Promise.all([document.fonts.load('700 24px FUD'), document.fonts.load('700 24px Source'), document.fonts.load('400 24px Source')]);
@@ -61,9 +62,10 @@ for (const width of [375, 768, 1440, 1920]) {
 }
 
 const page = await browser.newPage({ viewport: { width: 375, height: 812 } });
-await page.goto('http://127.0.0.1:4173', { waitUntil: 'networkidle' });
+await page.goto(baseUrl, { waitUntil: 'networkidle' });
 const firstWindow = page.getByRole('button', { name: 'Окно 1: Свои' });
 await firstWindow.click();
+await page.getByRole('dialog').waitFor({state:'visible'});
 if (!(await page.getByRole('dialog').isVisible())) issues.push({ scenario: 'story', errors: ['dialog did not open'] });
 if (await firstWindow.evaluate(el=>el.classList.contains('viewed'))) issues.push({ scenario: 'story', errors: ['window changed before the story was closed'] });
 const storyLayers = await page.locator('.story-scene').evaluate(el => {
@@ -87,6 +89,7 @@ for (let i = 1; i < 4; i++) {
   if (!image.includes(`open-window-variants.svg#window${i + 1}`)) issues.push({ scenario: 'window variants', errors: [`missing variant ${i + 1}`] });
 }
 await page.getByRole('button', { name: /Окно 6:.*20 декабря/ }).click();
+await page.getByText('Здесь пока тихо.').waitFor({state:'visible'});
 if (!(await page.getByText('Здесь пока тихо.').isVisible())) issues.push({ scenario: 'locked', errors: ['locked date message missing'] });
 await page.keyboard.press('Escape');
 if (await page.getByRole('button', { name: /Окно 6:.*20 декабря/ }).evaluate(el=>el.classList.contains('viewed'))) issues.push({ scenario: 'locked', errors: ['locked window was marked viewed'] });
@@ -136,7 +139,7 @@ if (!(await page.getByText(/Отправка пока недоступна/).isV
 await page.screenshot({ path: 'artifacts/screenshots/letter-375.png', fullPage: true });
 
 const designPage = await browser.newPage({ viewport: { width: 802, height: 1426 } });
-await designPage.goto('http://127.0.0.1:4173', { waitUntil: 'networkidle' });
+await designPage.goto(baseUrl, { waitUntil: 'networkidle' });
 await designPage.getByRole('button', { name: 'Пройти квиз' }).click();
 const quizRect = await designPage.getByRole('dialog').evaluate(element => {
   const rect = element.getBoundingClientRect();
@@ -149,7 +152,7 @@ await designPage.getByLabel('Ещё истории').getByRole('button', { name:
 await designPage.screenshot({ path: 'artifacts/screenshots/letter-802.png' });
 await designPage.close();
 const desktop = await browser.newPage({ viewport: { width: 1440, height: 900 } });
-await desktop.goto('http://127.0.0.1:4173', { waitUntil: 'networkidle' });
+await desktop.goto(baseUrl, { waitUntil: 'networkidle' });
 await desktop.getByLabel('Ещё истории').getByRole('button', { name: 'Отправить в будущее' }).click();
 await desktop.getByRole('dialog').getByRole('button', { name: 'Отправить', exact: true }).click();
 const buttonVisible = await desktop.getByRole('dialog').evaluate(el => {

@@ -37,7 +37,8 @@
   const fontsLoaded = document.fonts
     ? Promise.all(['500 16px FUD', '700 16px FUD', '400 16px Source', '600 16px Source', '700 16px Source'].map(font => document.fonts.load(font)))
     : Promise.resolve();
-  Promise.all([windowLoaded, fontsLoaded, ...resources.map(loadImage)])
+  const storiesLoaded = windowLoaded.then(() => window.__storiesReady || Promise.reject(new Error('Окна не загружены')));
+  Promise.all([windowLoaded, storiesLoaded, fontsLoaded, ...resources.map(loadImage)])
     .then(() => {
       if (finished) return;
       if (window.__siteLoadFailures.length) return fail();

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium } from '/Users/stas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';
 
+const baseUrl = process.env.TEST_BASE_URL || 'http://127.0.0.1:4173';
 const browser = await chromium.launch({headless:true, executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
 try {
   for (const width of [375, 1440]) {
@@ -8,7 +9,7 @@ try {
     let release;
     const waitForRelease = new Promise(resolve => { release = resolve; });
     await page.route('**/house-animation.gif', async route => { await waitForRelease; await route.continue(); });
-    const navigation = page.goto('http://127.0.0.1:4173', {waitUntil:'commit'});
+    const navigation = page.goto(baseUrl, {waitUntil:'commit'});
     await page.locator('.page-loader').waitFor({state:'visible'});
     assert.equal(await page.locator('main').isHidden(), true);
     release();
@@ -20,18 +21,18 @@ try {
   for (const failedAsset of ['lock.png', 'loader.js']) {
     const page = await browser.newPage();
     await page.route(`**/${failedAsset}`, route => route.abort());
-    await page.goto('http://127.0.0.1:4173', {waitUntil:'load'});
+    await page.goto(baseUrl, {waitUntil:'load'});
     await page.locator('#page-loader-retry').waitFor({state:'visible'});
     assert.match(await page.locator('#page-loader-message').textContent(), /Не удалось загрузить/);
     await page.close();
   }
   const reduced = await browser.newPage({reducedMotion:'reduce'});
-  await reduced.goto('http://127.0.0.1:4173', {waitUntil:'load'});
+  await reduced.goto(baseUrl, {waitUntil:'load'});
   await reduced.locator('.page-loader').waitFor({state:'hidden'});
   assert.match(await reduced.locator('.goat-character img').evaluate(img => img.currentSrc), /goat-still\.png$/);
   await reduced.close();
   const noScript = await browser.newPage({javaScriptEnabled:false});
-  await noScript.goto('http://127.0.0.1:4173', {waitUntil:'load'});
+  await noScript.goto(baseUrl, {waitUntil:'load'});
   assert.equal(await noScript.locator('main').isVisible(), true);
   assert.equal(await noScript.locator('.page-loader').isHidden(), true);
   await noScript.close();
