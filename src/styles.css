@@ -63,7 +63,7 @@ p{line-height:1.2}
 .ending small{display:block;margin:12px;opacity:.7}
 .ending button{opacity:.6;cursor:not-allowed}
 footer{position:relative;z-index:2;padding:50px 20px;color:#fff}
-.footer-logo{display:block;width:min(335px,80vw);height:auto;margin:auto}
+.footer-logo{display:block;width:min(335px,80vw);height:auto;margin:30px auto 0}
 footer div{display:flex;gap:20px;justify-content:center;margin:35px 0}
 footer a,footer span{color:white;text-decoration:none;border:1px solid #a6b2ca;padding:15px 25px;border-radius:12px}
 footer a{display:flex;align-items:center;justify-content:center;text-align:center}
