@@ -290,13 +290,13 @@ footer div{flex-wrap:wrap}
 }
 
 @media(min-width:1100px){
-  .quiz-survey .quiz-heading{font-size:calc(clamp(27px,5vw,54px) + 8px);margin-bottom:18px}
-  .quiz-survey .quiz-progress{margin-bottom:28px}
+  .quiz-survey .quiz-heading{font-size:calc(clamp(27px,5vw,54px) + 8px);margin-bottom:28px}
+  .quiz-survey .quiz-progress{margin-bottom:38px}
   .quiz-survey #quiz-form{flex:0 0 auto}
   .quiz-survey #quiz-form legend{margin-bottom:24px}
   .quiz-survey #quiz-form .option{margin-bottom:18px}
   .quiz-survey .quiz-error{margin:10px 0 18px}
-  .quiz-survey .quiz-nav{margin-top:12px}
+  .quiz-survey .quiz-nav{margin-top:22px}
   .quiz-survey #quiz-form .quiz-nav #quiz-prev,
   .quiz-survey #quiz-form .quiz-nav #quiz-next[aria-label="Следующий вопрос"]{min-width:68px;min-height:52px;font-size:28px}
 }
