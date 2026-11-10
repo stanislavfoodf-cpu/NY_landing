@@ -73,7 +73,7 @@ await page.screenshot({ path: 'artifacts/screenshots/story-375.png', fullPage: t
 await page.keyboard.press('Escape');
 if (!(await firstWindow.evaluate(element => element === document.activeElement))) issues.push({ scenario: 'story', errors: ['focus was not returned'] });
 const viewedAppearance = await firstWindow.evaluate(el=>({viewed:el.classList.contains('viewed'),image:getComputedStyle(el,'::after').backgroundImage}));
-if (!viewedAppearance.viewed || !viewedAppearance.image.includes('open-window-new.png')) issues.push({ scenario: 'story', errors: ['viewed window image is missing'] });
+if (!viewedAppearance.viewed || !viewedAppearance.image.includes('open-window-v5.webp')) issues.push({ scenario: 'story', errors: ['viewed window image is missing'] });
 await page.reload({ waitUntil: 'networkidle' });
 if (!(await firstWindow.evaluate(el=>el.classList.contains('viewed')))) issues.push({ scenario: 'story', errors: ['viewed state was not restored after reload'] });
 for (let i = 1; i < 4; i++) {
@@ -89,7 +89,7 @@ for (let i = 1; i < 4; i++) {
   }
   await page.getByRole('button', { name: 'Закрыть' }).click();
   const image = await window.evaluate(el => getComputedStyle(el, '::after').backgroundImage);
-  if (!image.includes('open-window-new.png')) issues.push({ scenario: 'window variants', errors: [`missing variant ${i + 1}`] });
+  if (!image.includes('open-window-v5.webp')) issues.push({ scenario: 'window variants', errors: [`missing variant ${i + 1}`] });
 }
 await page.getByRole('button', { name: /Окно 6:.*20 декабря/ }).click();
 await page.getByText('Здесь пока тихо.').waitFor({state:'visible'});

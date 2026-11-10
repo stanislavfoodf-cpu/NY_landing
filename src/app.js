@@ -9,7 +9,7 @@ const results=[['Тихий Новый год','Ваш главный новог
 if(typeof document!=='undefined'){
 const $=s=>document.querySelector(s), overlay=$('#overlay'), dialog=$('.dialog'), content=$('#dialog-content');let previous,answers=[],step=0,pendingStory=null;
 const analytics=(type,detail={})=>document.dispatchEvent(new CustomEvent('sk-ny:analytics',{detail:{type,...detail}}));
-function markStoryViewed(){if(!pendingStory)return;const {button,index}=pendingStory;button.classList.add('viewed');if(!button.getAttribute('aria-label').includes('просмотрено'))button.setAttribute('aria-label',button.getAttribute('aria-label')+', просмотрено');try{sessionStorage.setItem('window-'+index,'1')}catch{}pendingStory=null;}
+function markStoryViewed(){if(!pendingStory)return;const {button,index}=pendingStory;button.classList.add('viewed');if(!button.getAttribute('aria-label').includes('просмотрено'))button.setAttribute('aria-label',button.getAttribute('aria-label')+', просмотрено');try{sessionStorage.setItem('window-v5-'+index,'1')}catch{}pendingStory=null;}
 function open(html,kind=''){if(!overlay.hidden&&dialog.classList.contains('story-dialog')&&kind!=='story-dialog')markStoryViewed();if(overlay.hidden)previous=document.activeElement;content.innerHTML=html;content.scrollTop=0;dialog.className='dialog '+kind;overlay.hidden=false;dialog.scrollTop=0;document.body.classList.add('modal-open');dialog.focus();}
 function close(){if(dialog.classList.contains('story-dialog'))markStoryViewed();overlay.hidden=true;document.body.classList.remove('modal-open');previous?.focus();}
 $('.close').onclick=close;overlay.addEventListener('click',e=>{if(e.target===overlay)close()});document.addEventListener('keydown',e=>{if(overlay.hidden)return;if(e.key==='Escape')close();if(e.key==='Tab'){const items=[...dialog.querySelectorAll('button:not([disabled]),input,textarea,[href]')];if(!items.length)return;const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
@@ -21,7 +21,7 @@ function updateWindow(button,state){
   if(locked)button.classList.remove('viewed');
   button.setAttribute('aria-label',`Окно ${state.id}: ${state.title||'История'}${locked?', откроется '+state.unlockLabel:''}`);
   button.innerHTML=locked?`<span>♙<small>открывается<br><b>${escapeHtml(state.unlockLabel)}</b></small></span>`:'';
-  if(!locked){try{if(sessionStorage.getItem('window-'+(state.id-1))){button.classList.add('viewed');button.setAttribute('aria-label',button.getAttribute('aria-label')+', просмотрено')}}catch{}}
+  if(!locked){try{if(sessionStorage.getItem('window-v5-'+(state.id-1))){button.classList.add('viewed');button.setAttribute('aria-label',button.getAttribute('aria-label')+', просмотрено')}}catch{}}
 }
 async function fetchWindowStates(){
   const response=await fetch('/api/windows',{cache:'no-store'});

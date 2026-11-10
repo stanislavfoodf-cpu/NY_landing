@@ -5,7 +5,7 @@
 @font-face{font-family:Source;src:url('assets/fonts/source-sans-pro-bold-supplied.ttf') format('truetype');font-weight:700;font-display:swap}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;color:#fff;background-color:#1c2b49;background-image:linear-gradient(to bottom,transparent 88%,#1c2b49 100%),url('assets/figma/raw/house-new.webp');background-size:160vw 170.76vw;background-position:center top;background-repeat:no-repeat;font-family:Source,sans-serif;text-align:center;overflow-x:hidden}
+body{margin:0;color:#fff;background-color:#1c2b49;background-image:linear-gradient(to bottom,transparent 88%,#1c2b49 100%),url('assets/figma/raw/house-v5.webp');background-size:160vw 170.76vw;background-position:center top;background-repeat:no-repeat;font-family:Source,sans-serif;text-align:center;overflow-x:hidden}
 body.modal-open{overflow:hidden}
 button,a,input,textarea{font:inherit}
 button{cursor:pointer}
@@ -22,7 +22,7 @@ p{line-height:1.2}
 .window{border:0;background:transparent;color:white;position:relative;border-radius:4px;min-width:0;min-height:0;transition:box-shadow .3s,background .3s}
 .window::before{content:'';position:absolute;inset:-2px}
 .window:hover,.window:focus-visible{background:#ffcf7944;box-shadow:0 0 35px #ffd579}
-.window.viewed::after{content:'';position:absolute;inset:0;background:url('assets/figma/raw/open-window-new.png') center / 100% 100% no-repeat;pointer-events:none}
+.window.viewed::after{content:'';position:absolute;inset:0;background:url('assets/figma/raw/open-window-v5.webp') center / 100% 100% no-repeat;pointer-events:none}
 .window.locked{background:#111b4366}
 .window.locked span{font-size:0;text-shadow:0 1px 4px #000;display:block}
 .window.locked span:before{content:'';display:block;width:42px;height:42px;margin:0 auto 3px;background:url('assets/figma/raw/lock.png') center/contain no-repeat}
