@@ -21,7 +21,7 @@ p{line-height:1.2}
 .windows{position:absolute;left:38.92%;top:37.06%;width:22.1%;height:22.96%;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);column-gap:12.5%;row-gap:5%}
 .window{border:0;background:transparent;color:white;position:relative;border-radius:4px;min-width:0;min-height:0;transition:box-shadow .3s,background .3s}
 .window::before{content:'';position:absolute;inset:-2px}
-.window:hover,.window:focus-visible{background:#ffcf7944;box-shadow:0 0 35px #ffd579}
+.window:hover,.window:focus-visible{box-shadow:0 0 35px #ffd579}
 .window.viewed::after{content:'';position:absolute;inset:0;background:url('assets/figma/raw/viewed-window.jpg') center / cover no-repeat;pointer-events:none}
 .window.locked{background:#111b4366}
 .window.locked span{font-size:0;text-shadow:0 1px 4px #000;display:block}
@@ -304,5 +304,5 @@ footer div{flex-wrap:wrap}
   .quiz-survey .quiz-error{color:#f5d9cb;font-size:18px!important;line-height:1.25}
 }
 
-.window.viewed::before,.window.locked::before{z-index:1;pointer-events:none;transition:background .3s}
-.window.viewed:hover::before,.window.viewed:focus-visible::before,.window.locked:hover::before,.window.locked:focus-visible::before{background:#ffcf7944}
+.window::before{z-index:1;pointer-events:none;transition:background .3s}
+.window:hover::before,.window:focus-visible::before{background:#ffcf7966}
