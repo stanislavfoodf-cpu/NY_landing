@@ -183,7 +183,7 @@ footer div{flex-wrap:wrap}
 .letter-dialog .close{position:absolute;float:none;top:14px;right:14px;margin:0;width:44px;height:44px;}
 .letter-dialog .letter-field textarea{height:clamp(140px,25dvh,240px);max-height:100%;resize:none;outline:none;}
 .letter-dialog .letter-field textarea:focus-visible{outline:none;}
-.letter-dialog .consent{align-items:flex-start;gap:12px;color:#c6cde2;font-size:clamp(14px,1.4vw,18px);line-height:1.2}
+.letter-dialog .consent{align-items:flex-end;gap:12px;color:#c6cde2;font-size:clamp(14px,1.4vw,18px);line-height:1.2}
 .letter-dialog #email-error,.letter-dialog #letter-error,.letter-dialog #consent-error{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .letter-dialog .consent input{appearance:none;flex:none;position:relative;width:28px;height:28px;margin:1px 0 0;border:2px solid white;border-radius:7px;background:transparent;cursor:pointer}
 .letter-dialog .consent input:checked::after{content:'';position:absolute;left:7px;top:2px;width:7px;height:14px;border:solid white;border-width:0 2px 2px 0;transform:rotate(45deg)}
