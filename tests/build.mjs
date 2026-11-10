@@ -1,0 +1,1 @@
+import {access} from 'node:fs/promises';for(const file of ['index.html','src/app.js','src/styles.css','src/assets/figma/raw/main-07.png','src/assets/fonts/fud-grotesk-bold.ttf'])await access(file);console.log('Build validation passed: static project and local assets are present.');

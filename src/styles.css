@@ -1,0 +1,290 @@
+@font-face{font-family:FUD;src:url('assets/fonts/fud-grotesk-medium.ttf');font-weight:500}
+@font-face{font-family:FUD;src:url('assets/fonts/fud-grotesk-bold-web.ttf') format('truetype');font-weight:700;font-display:swap}
+@font-face{font-family:Source;src:url('assets/fonts/source-sans-pro-regular-supplied.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:Source;src:url('assets/fonts/source-sans-pro-600.ttf');font-weight:600}
+@font-face{font-family:Source;src:url('assets/fonts/source-sans-pro-bold-supplied.ttf') format('truetype');font-weight:700;font-display:swap}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:#fff;background-color:#1c2b49;background-image:linear-gradient(to bottom,transparent 88%,#1c2b49 100%),url('assets/figma/raw/main-07.png');background-size:160vw 170.76vw;background-position:center top;background-repeat:no-repeat;font-family:Source,sans-serif;text-align:center;overflow-x:hidden}
+body.modal-open{overflow:hidden}
+button,a,input,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #ffe786;outline-offset:4px}
+h1,h2{font-family:FUD,sans-serif;font-weight:500;line-height:1.05;margin:0}
+h1{text-transform:uppercase;font-size:clamp(34px,3.2vw,62px)}
+h2{font-size:clamp(28px,2vw,40px)}
+p{line-height:1.2}
+ .intro{position:absolute;z-index:2;top:3vw;left:0;width:100%;pointer-events:none}
+.intro p{font-size:clamp(19px,1.65vw,30px);margin:18px 0 34px}
+.house-viewport{width:100%;overflow:hidden}
+.house{position:relative;width:160%;margin-left:-30%;aspect-ratio:3838/4096}
+.windows{position:absolute;left:38.92%;top:37.06%;width:22.1%;height:22.96%;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);column-gap:12.5%;row-gap:5%}
+.window{border:0;background:transparent;color:white;position:relative;border-radius:4px;min-width:0;min-height:0;transition:box-shadow .3s,background .3s}
+.window::before{content:'';position:absolute;inset:-2px}
+.window:hover,.window:focus-visible{background:#ffcf7944;box-shadow:0 0 35px #ffd579}
+.window.viewed::after{content:'';position:absolute;inset:0;background:url('assets/figma/raw/viewed-window.jpg') center / cover no-repeat;pointer-events:none}
+.window.locked{background:#111b4366}
+.window.locked span{font-size:0;text-shadow:0 1px 4px #000;display:block}
+.window.locked span:before{content:'';display:block;width:42px;height:42px;margin:0 auto 3px;background:url('assets/figma/raw/lock.png') center/contain no-repeat}
+.window:nth-child(11){grid-area:3 / 4}
+.window:nth-child(12){grid-area:3 / 3}
+.window:nth-child(13){grid-area:4 / 3}
+.window:nth-child(14){grid-area:4 / 4}
+.window.locked small{display:block;font-size:clamp(8px,.7vw,14px);line-height:1}
+.goat{position:absolute;z-index:2;left:33%;top:50%;width:18%;padding:1.4%;border:0;border-radius:15px;color:white;text-align:left;background:#d48d77e8;box-shadow:0 0 20px #e5a78a;font-size:clamp(10px,1.1vw,22px);line-height:1.1}
+.goat strong{display:block;font-family:FUD;font-size:clamp(15px,1.3vw,25px);margin-bottom:5px}
+.goat b{display:block;margin-top:6px}
+.house-animation,.goat-character,.mailbox{position:absolute;pointer-events:none}
+.house-animation{display:block;left:38.75%;top:28.81%;width:23.37%;height:7.82%;overflow:hidden}
+.house-animation img{position:absolute;left:-5.35%;top:-15.8%;width:107.2%;height:auto}
+.goat-character{left:40%;top:59.5%;width:6%;height:12%}
+.goat-character img,.mailbox img{display:block;width:100%;height:100%;object-fit:contain}
+.mailbox{width:5%;height:8%;left:51.5%;top:61.5%}
+.cards{position:relative;z-index:2;display:flex;justify-content:center;gap:26px;margin:-21% auto 0}
+.card{width:325px;min-height:320px;border-radius:18px;padding:35px 24px 26px}
+.card h2{font-size:clamp(34px,calc(2.5vw + 2px),50px);line-height:.95}
+.letter-card{width:425px}
+.house-arrow{position:absolute;pointer-events:none;z-index:1;height:auto}
+.house-arrow-goat{left:42%;top:61.35%;width:2.4%;transform:rotate(90deg) scale(1.3,-.8)}
+.house-arrow-mail{left:53.45%;top:66.67%;width:4.87%;transform:rotate(-90deg) scale(1.3,-.8)}
+.card p{font-size:21px}
+.quiz-card{position:relative;aspect-ratio:1 / 1;background:linear-gradient(145deg,#6579aa,#344a80);border:2px solid #b1c0df;box-shadow:0 0 20px #ffe8a133}
+.quiz-card::after,.quiz-dialog::after,.letter-dialog::after,.story-scene::after{content:'';position:absolute;pointer-events:none;z-index:1;background:url('assets/figma/svg/garland-original.svg') center / contain no-repeat}
+/* The visible wire occupies an inset, asymmetric part of the source image.
+   These offsets align that wire with the square card at every size. */
+.quiz-card::after{inset:auto;left:-9.8%;top:-13.5%;width:130.7%;aspect-ratio:1756 / 1700;background-size:100% 100%}
+.letter-card{background:#c68773;box-shadow:0 0 18px #f1b6a0}
+.card button,.dialog button:not(.close),.ending button{border:2px solid white;border-radius:40px;color:#fff;background:transparent;padding:10px 28px;font-weight:700}
+.ending{padding:90px 20px 20px}
+.ending small{display:block;margin:12px;opacity:.7}
+.ending button{opacity:.6;cursor:not-allowed}
+footer{position:relative;z-index:2;padding:50px 20px;color:#fff}
+.footer-logo{display:block;width:min(335px,80vw);height:auto;margin:auto}
+footer div{display:flex;gap:20px;justify-content:center;margin:35px 0}
+footer a,footer span{color:white;text-decoration:none;border:1px solid #a6b2ca;padding:15px 25px;border-radius:12px}
+footer a{display:flex;align-items:center;justify-content:center;text-align:center}
+footer .social{display:grid;place-items:center;width:68px;min-height:68px;padding:15px}
+footer .social img{display:block;max-width:100%;height:auto}
+footer small{opacity:.5}
+.overlay[hidden]{display:none}
+.overlay{position:fixed;z-index:10;inset:0;background:#071126d9;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow:auto}
+.dialog{position:relative;width:min(100%,600px);max-height:90dvh;overflow-y:auto;margin:auto;border-radius:20px;padding:55px 50px;background:linear-gradient(145deg,#617eb7,#1c305f);box-shadow:0 0 60px #050a20;text-align:center;animation:arrive .35s ease}
+.dialog p{font-size:22px}
+.close{position:absolute;right:18px;top:12px;border:2px solid white;border-radius:12px;width:58px;height:54px;background:transparent;color:transparent;font-size:0;line-height:1;z-index:3}
+.close::before,.close::after{content:'';position:absolute;left:50%;top:50%;width:70%;height:2px;background:white;transform:translate(-50%,-50%) rotate(45deg)}
+.close::after{transform:translate(-50%,-50%) rotate(-45deg)}
+.story-dialog{width:min(90vw,850px);max-height:none;overflow:visible;background:transparent;box-shadow:none;padding:30px}
+.story-art{position:relative;z-index:1;height:min(52vh,560px);background:url('assets/figma/raw/story-06.jpeg') center 66%/cover;border:7px solid #d2dfff;box-shadow:0 0 45px #85a9fa;border-radius:50% 50% 44% 44%/42% 42% 34% 34%}
+.ribbon{position:relative;z-index:1;margin:-25px auto 0;padding:18px 25px;background:#244899;transform:rotate(-3deg);font-family:FUD;font-size:clamp(25px,3vw,42px)!important;max-width:90%}
+.ribbon.second{margin:5px auto 15px;transform:rotate(2deg);background:#375bb2}
+.quiz-dialog{border:2px solid #c7d7f2;box-shadow:0 0 40px #050a20}
+.quiz-dialog::after,.letter-dialog::after{width:100%}
+.story-scene{position:relative}
+.story-scene::after{inset:-24px;z-index:0;transform:rotate(45deg)}
+.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:15px!important}
+.option{display:block;text-align:left;background:#ffffff1b;border:1px solid #ffffff77;border-radius:12px;padding:15px;margin:12px 0;font-size:20px}
+.option input{accent-color:#ffce72}
+.quiz-dialog form button{margin-top:20px}
+.letter-dialog{background:#c68773}
+.letter-dialog form{text-align:left}
+.letter-dialog label:not(.consent){display:block;margin:15px 0}
+.letter-dialog input:not([type=checkbox]),.letter-dialog textarea{display:block;width:100%;border:1px solid white;border-radius:8px;background:#ffffffef;color:#19274a;padding:12px;margin-top:5px}
+.letter-dialog small{color:#fff6a6}
+.consent{display:flex;gap:8px;align-items:center}
+.letter-dialog form button{margin-top:20px}
+.promo{font-family:FUD;font-size:48px!important}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@keyframes arrive{from{opacity:0;transform:scale(.85)}
+to{opacity:1;transform:scale(1)}
+}
+@media(min-width:1100px){body{background-size:154.07vw 164.42vw;background-position:center max(-513px,-26.72vw)}.house{width:100%;height:126.98vw;max-height:2438px;margin-left:0;aspect-ratio:auto}.windows{left:32.97%;top:26.95%;width:34.1%;height:29.74%}.house-animation{left:32.6%;top:16.24%;width:36%;height:10.13%}.house-arrow-goat{left:37.5%;top:58.5%;width:3.7%}.house-arrow-mail{left:55.3%;top:66.3%;width:7.5%}.cards{margin:-31vw auto 0}.ending{padding:36px 20px 10px}footer{padding:24px 20px}}
+@media(min-width:701px) and (max-width:1099px){.house-arrow-goat{left:39.1%;top:57%;width:3%}.house-arrow-mail{left:56.2%}}
+@media(max-width:700px){.intro{top:24px}
+body{background-size:400vw 426.89vw;background-position:center 40px}
+.goat-character{left:44%;top:64%;width:4%;height:9%}
+.mailbox{width:4%;height:7%;left:51%;top:65%}
+.intro p{margin:12px 0}
+.house{width:400%;margin-left:-150%;margin-top:40px}
+.window.locked span{font-size:0}
+.window.locked small{font-size:9px}
+.goat{left:37%;top:62%;width:16%;padding:8px}
+.house-arrow-goat{left:42%;top:66.7%;width:2.4%}
+.mailbox{width:5%}
+.cards{margin:-38% auto 0;flex-direction:column;align-items:center;gap:20px}
+.card{width:min(78vw,325px);min-height:0}
+.quiz-card{width:min(70vw,325px)}
+.card h2{font-size:clamp(32px,calc(8vw + 2px),42px)}
+.quiz-card{padding:30px 20px}
+.quiz-card h2{font-size:clamp(27px,7.5vw,34px)}
+.quiz-card p{font-size:18px;margin:10px 0 14px}
+.quiz-card button{font-size:16px;padding:8px 22px}
+.ending{padding-top:70px}
+.dialog{padding:60px 38px}
+.story-dialog{padding:20px}
+.story-art{height:40vh}
+footer div{flex-wrap:wrap}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+.house-animation{display:none}
+}
+
+/* The dialog scrolls as a whole; decorative frames never intercept input. */
+.quiz-dialog,.letter-dialog{width:min(100%,802px);max-height:none;overflow:visible;margin:25px auto;border:0;border-radius:20px;padding:clamp(70px,12%,130px) clamp(52px,12%,145px);background:linear-gradient(180deg,#6270b2,#293558);box-shadow:0 0 40px #050a20}
+.quiz-dialog::after,.letter-dialog::after{inset:-55px;background-image:url('assets/figma/svg/garland-original.svg');background-size:contain;background-position:center;background-repeat:no-repeat;z-index:0}
+#dialog-content{position:relative;z-index:1}
+.quiz-dialog .close,.letter-dialog .close{position:sticky;float:right;top:0;margin:-45px -65px 0 0}
+.quiz-heading{font-size:clamp(48px,9vw,100px);line-height:.96;margin:0 0 1em}
+#quiz-form fieldset{border:0;padding:0;margin:0 0 56px;text-align:left;min-width:0}
+#quiz-form legend{font-weight:700;font-size:clamp(20px,3.8vw,30px);line-height:1.2;margin-bottom:22px}
+#quiz-form .option{display:flex;align-items:flex-start;gap:18px;padding:0;margin:0 0 17px;background:none;border:0;border-radius:0;font-size:clamp(18px,3.4vw,28px);line-height:1.15}
+#quiz-form .option input{appearance:none;flex:none;width:30px;height:30px;border:1px solid white;border-radius:50%;margin:0;accent-color:white}
+#quiz-form .option input:checked{background:radial-gradient(circle,white 0 40%,transparent 44%)}
+#quiz-form button,.letter-dialog form button,.quiz-result button{min-width:min(100%,330px);font-size:clamp(20px,3.5vw,32px);font-weight:600}
+.quiz-result{min-height:min(90dvh,900px);display:flex;align-items:center}
+.quiz-result #dialog-content{width:100%}
+.result-label{font-family:FUD;font-size:clamp(38px,6vw,54px)!important;margin:0 0 1em}
+.result-title{font-size:clamp(48px,8vw,82px);line-height:.98}
+.result-copy{font-size:clamp(22px,3.5vw,30px)!important;font-weight:600;margin:1.5em auto}
+.result-art{width:min(55%,300px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#ffffff0c 0 55%,#ffffff07 56% 70%,transparent 71%);margin:3em auto}
+.letter-dialog form{text-align:center}
+.letter-to,.letter-dialog .email-field{display:flex;align-items:center;width:100%;min-height:76px;border:1px solid white;border-radius:60px;background:#ffffff55;padding:10px 25px;margin:0 0 20px;text-align:left}
+.letter-to,.email-field span{font:500 clamp(28px,5vw,54px)/1 FUD;white-space:nowrap}
+.letter-dialog label.email-field{display:flex;gap:20px}
+.letter-dialog .email-field input{margin:0;padding:0;border:0;background:transparent;color:white;font-size:clamp(18px,3vw,30px);min-width:0}
+.letter-dialog .email-field input::placeholder{color:#dce1f2}
+.letter-dialog .letter-field{display:block;margin:35px 0 0!important}
+.letter-dialog .letter-field textarea{height:clamp(300px,55vh,645px);resize:vertical;border:0;border-radius:32px;padding:32px;color:#6270b2;font-size:clamp(18px,3vw,28px);line-height:1.5}
+.letter-dialog .letter-field textarea::placeholder{color:#d5dbed}
+.letter-dialog .letter-hint{color:#c6cde2;font-size:clamp(18px,3vw,26px);margin:30px auto 20px}
+.letter-dialog .consent{text-align:left;margin:20px 0;color:white}
+.letter-dialog small{display:block;text-align:left}
+@media(max-width:700px){.quiz-dialog,.letter-dialog{padding:70px 42px 55px}.quiz-dialog::after,.letter-dialog::after{inset:-22px}.quiz-dialog .close,.letter-dialog .close{margin:-54px -30px 0 0;width:44px;height:44px}.letter-to,.letter-dialog .email-field{padding:10px 15px;min-height:58px}.letter-dialog label.email-field{gap:10px}.letter-dialog .letter-field textarea{padding:22px}}
+
+/* Keep quiz pages square, with internal scrolling on short screens. */
+.quiz-survey{width:min(802px,calc(100vw - 48px),calc(100dvh - 48px));height:min(802px,calc(100vw - 48px),calc(100dvh - 48px));aspect-ratio:1;overflow:auto;margin:auto;padding:clamp(40px,7%,72px);}
+.quiz-survey::after{inset:-18px;background-image:url('assets/figma/svg/garland-original.svg');}
+.quiz-survey .close{position:sticky;top:0;margin:-25px -25px 0 0;}
+.quiz-survey .quiz-heading{font-size:clamp(27px,5vw,54px);line-height:1;margin:0 35px 10px;}
+.quiz-progress{font-size:clamp(14px,2vw,18px)!important;opacity:.8;margin:0 0 18px;}
+.quiz-survey #quiz-form fieldset{margin:0;text-align:left;}
+.quiz-survey #quiz-form legend{font-size:clamp(18px,2.5vw,27px);margin-bottom:14px;}
+.quiz-survey #quiz-form .option{font-size:clamp(16px,2.1vw,23px);gap:12px;margin-bottom:10px;}
+.quiz-survey #quiz-form .option input{width:24px;height:24px;}
+.quiz-nav{display:flex;justify-content:space-between;gap:12px;align-items:center;}
+.quiz-survey #quiz-form .quiz-nav button{min-width:52px;min-height:44px;margin:0;padding:5px 18px;font-size:24px;}
+.quiz-nav button:disabled{opacity:.35;cursor:default;}
+.quiz-error{min-height:1.2em;margin:5px 0;color:#fff2b4;font-size:16px!important;text-align:left;}
+@media(max-width:700px){.quiz-survey{padding:35px 30px}.quiz-survey .close{margin:-24px -20px 0 0}.quiz-survey::after{inset:-12px}.quiz-survey .quiz-heading{margin:0 35px 5px;font-size:clamp(23px,7vw,38px)}.quiz-progress{margin-bottom:8px}.quiz-survey #quiz-form .option{font-size:16px;margin-bottom:7px}.quiz-survey #quiz-form legend{font-size:18px;margin-bottom:8px}}
+
+/* The outer frame stays outside the square while the form scrolls inside it. */
+.letter-dialog{width:min(802px,calc(100vw - 96px),calc(100dvh - 96px));height:min(802px,calc(100vw - 96px),calc(100dvh - 96px));aspect-ratio:1;max-height:none;overflow:visible;margin:auto;padding:clamp(28px,6%,70px);}
+.letter-dialog::after{inset:-12%;width:auto;background-image:url('assets/figma/svg/garland-original.svg');background-size:contain;}
+.letter-dialog #dialog-content{height:100%;overflow:auto;overscroll-behavior:contain;padding:0 4px;}
+.letter-dialog .close{position:absolute;float:none;top:14px;right:14px;margin:0;width:44px;height:44px;}
+.letter-dialog .letter-field textarea{height:clamp(140px,25dvh,240px);max-height:100%;resize:none;outline:none;}
+.letter-dialog .letter-field textarea:focus-visible{outline:none;}
+.letter-dialog .consent{align-items:flex-start;gap:12px;color:#c6cde2;font-size:clamp(14px,1.4vw,18px);line-height:1.2}
+.letter-dialog #email-error,.letter-dialog #letter-error,.letter-dialog #consent-error{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.letter-dialog .consent input{appearance:none;flex:none;position:relative;width:28px;height:28px;margin:1px 0 0;border:2px solid white;border-radius:7px;background:transparent;cursor:pointer}
+.letter-dialog .consent input:checked::after{content:'';position:absolute;left:7px;top:2px;width:7px;height:14px;border:solid white;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.letter-dialog .consent input[aria-invalid="true"]{border-color:#ff6969;box-shadow:0 0 0 2px #ff696955}
+.letter-dialog .consent label{display:inline;margin:0;cursor:pointer}
+.letter-dialog .consent a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.letter-dialog .email-field input{flex:1;transform:translateY(.12em);}
+@media(max-width:700px){.letter-dialog{padding:38px 22px 22px}.letter-dialog::after{inset:-10%}.letter-dialog .close{top:5px;right:5px;margin:0;width:44px;height:44px}.letter-dialog .letter-field textarea{height:clamp(120px,25dvh,180px)}}
+
+
+/* Keep the visible wire aligned to the square panel, as on the quiz card. */
+.quiz-dialog,.letter-dialog{width:min(802px,calc(100vw - 96px),calc(100dvh - 96px));height:min(802px,calc(100vw - 96px),calc(100dvh - 96px));min-height:0;aspect-ratio:1;overflow:visible}
+.quiz-dialog::after,.letter-dialog::after{inset:auto;left:-9.8%;top:-13.5%;width:130.7%;height:auto;aspect-ratio:1756 / 1700;background-size:100% 100%}
+.quiz-dialog #dialog-content{width:100%;height:100%;overflow:auto;overscroll-behavior:contain}
+.quiz-survey .close{position:absolute;float:none;top:14px;right:14px;margin:0}
+@media(max-width:700px){.quiz-survey .close{top:5px;right:5px;margin:0}}
+
+/* On mobile, place the top of the animated house 30px below the intro. */
+@media(max-width:700px){
+  .intro{position:relative;top:auto;padding-top:24px}
+  .intro p{margin:12px 0 0}
+  .house{margin-top:calc(30px - 122.99vw)}
+  body{background-position:center calc(183px - 122.99vw)}
+}
+
+/* Mobile composition follows the proportions of the supplied reference. */
+@media(max-width:700px){
+  .goat{left:39.8%;top:56.3%;width:10.7%;padding:1%;font-size:clamp(9px,2.7vw,19px);line-height:1.2}
+  .goat strong{font-size:clamp(13px,4vw,28px);margin-bottom:.25em}
+  .goat-character{left:43.5%;top:62.5%;width:5.2%;height:11%}
+  .mailbox{left:51.1%;top:63%;width:5.8%;height:9%}
+  .house-arrow-goat{left:42%;top:63.4%;width:2.4%}
+  .house-arrow-mail{left:53.45%;top:66%;width:4.87%}
+  .cards{flex-direction:row;align-items:stretch;gap:3%;width:91%;margin:-116.5vw auto 0}
+  .card{min-height:0;padding:5% 2% 4%;border-radius:8px}
+  .quiz-card{width:42%;flex:none;padding:5% 2% 4%}
+  .letter-card{width:55%;flex:none;aspect-ratio:1.24}
+  .card h2,.quiz-card h2{font-size:clamp(14px,5vw,35px);line-height:1}
+  .card p,.quiz-card p{font-size:clamp(10px,3vw,21px);margin:8% 0 11%;line-height:1.15}
+  .card button,.quiz-card button{font-size:clamp(9px,2.7vw,18px);padding:5px 8px;max-width:100%}
+}
+@media(max-width:700px){
+  .cards{align-items:flex-start}
+  .card,.quiz-card{padding:3.5vw 2vw 2vw}
+  .card p,.quiz-card p{font-size:clamp(10px,2.7vw,19px);margin:2vw 0 2.4vw}
+  .card button,.quiz-card button{padding:3px 8px}
+}
+@media(max-width:700px){.quiz-card{border-width:1px}}
+@media(max-width:700px){
+  .cards{flex-direction:column;align-items:stretch;gap:9vw}
+  .letter-card,.quiz-card{width:100%;flex:none}
+  .letter-card{order:-1;aspect-ratio:auto;padding:8vw 4vw}
+  .quiz-card{padding:8vw 4vw}
+  .card h2,.quiz-card h2{font-size:clamp(28px,8vw,42px)}
+  .card p,.quiz-card p{font-size:clamp(16px,4.6vw,22px);margin:4vw 0 5vw}
+  .card button,.quiz-card button{font-size:clamp(15px,4vw,20px);padding:8px 22px}
+}
+@media(max-width:700px){html{overflow-x:clip}}
+@media(max-width:700px){
+  .quiz-card{display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:13% 7% 20%}
+  .quiz-card p{margin:0}
+}
+@media(max-width:700px){.card h2,.quiz-card h2{font-size:calc(clamp(28px,8vw,42px) + 12px)}}
+.card h2,.quiz-card h2{font-size:45.44px}
+@media(max-width:700px){
+  .window.locked small{position:relative;left:50%;width:max-content;transform:translateX(-50%);text-align:center}
+}
+
+@media(min-width:1100px){.intro h1 br{display:none}}
+@media(max-width:700px){
+  .quiz-survey #dialog-content{display:flex;flex-direction:column}
+  .quiz-survey #quiz-form{display:flex;flex:1 0 auto;flex-direction:column}
+  .quiz-survey #quiz-form legend{margin-bottom:18px}
+  .quiz-survey #quiz-form .option{margin-bottom:12px}
+  .quiz-survey .quiz-error{margin:8px 0 18px}
+  .quiz-survey .quiz-nav{margin-top:auto}
+}
+
+/* Keep question spacing and navigation consistent at every breakpoint. */
+.quiz-survey #dialog-content{display:flex;flex-direction:column}
+.quiz-survey #quiz-form{display:flex;flex:1 0 auto;flex-direction:column}
+.quiz-survey #quiz-form legend{margin-bottom:18px}
+.quiz-survey #quiz-form .option{margin-bottom:12px}
+.quiz-survey .quiz-error{margin:8px 0 18px}
+.quiz-survey .quiz-nav{margin-top:auto}
+
+/* The result follows the portrait reference; the question screens remain square. */
+.quiz-result{--result-width:min(802px,calc(100vw - 48px),calc((100dvh - 48px) * 0.5624));container-type:inline-size;display:block;width:var(--result-width);height:calc(var(--result-width) * 1.778);aspect-ratio:802 / 1426;padding:0;margin:auto}
+.quiz-result::after{content:none}
+.quiz-result .close{position:absolute;float:none;top:2%;right:4%;margin:0;width:clamp(32px,7cqw,58px);height:clamp(32px,7cqw,58px)}
+.quiz-result #dialog-content{display:flex;flex-direction:column;align-items:center;justify-content:space-between;width:100%;height:100%;overflow:auto;padding:13cqw 8cqw 19cqw}
+.quiz-result .result-label{font-size:clamp(20px,6.7cqw,54px)!important;line-height:1;margin:0}
+.quiz-result .result-title{max-width:80%;font-size:clamp(28px,10.2cqw,82px);line-height:.96;margin:0}
+.quiz-result .result-copy{font-size:clamp(14px,3.5cqw,30px)!important;line-height:1.25;margin:0;font-weight:600}
+.quiz-result .result-art{flex:none;position:relative;width:52%;aspect-ratio:1;margin:0;border-radius:50%;background:radial-gradient(circle,#ffffff0c 0 55%,#ffffff07 56% 70%,transparent 71%)}
+.quiz-result .result-art::before{content:'';position:absolute;inset:8%;background:url('assets/figma/raw/quiz-result-sleigh.png') center / contain no-repeat}
+.quiz-result #repeat{min-width:0;width:48%;padding:1.5cqw 3cqw;font-size:clamp(16px,4cqw,32px)}
+.quiz-result .close{min-width:0;padding:0}
+@media(max-width:700px){
+  .quiz-survey #quiz-form{flex:0 0 auto}
+  .quiz-survey .quiz-nav{margin-top:0}
+  .quiz-survey .quiz-error{margin:6px 0 10px}
+  .quiz-survey #quiz-form .quiz-nav #quiz-next:not([aria-label="Следующий вопрос"]){font-size:16px;line-height:1.2;white-space:nowrap;padding:8px 14px}
+}
