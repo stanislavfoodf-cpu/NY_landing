@@ -4,14 +4,21 @@
   const message = document.getElementById('page-loader-message');
   const retry = document.getElementById('page-loader-retry');
   const loader = document.getElementById('page-loader');
+  let supportsWebP = false;
+  try { supportsWebP = document.createElement('canvas').toDataURL('image/webp').startsWith('data:image/webp'); } catch {}
+  const houseSource = getComputedStyle(document.body).getPropertyValue('--house-source').match(/url\([\"']?([^\"')]+)[\"']?\)/);
+  const stylesheet = document.querySelector('link[rel=stylesheet]');
+  const houseImage = houseSource && stylesheet
+    ? new URL(houseSource[1], stylesheet.href).href
+    : 'src/assets/figma/raw/house-v6-3072.3d5b8afd8e1c.webp';
   const resources = [
-    'src/assets/figma/raw/house-v5.webp',
-    'src/assets/figma/raw/open-window-v5.webp',
+    houseImage,
+    'src/assets/figma/raw/open-window-v5-1000.da7c53b5f7b9.webp',
     'src/assets/figma/raw/lock.png',
-    'src/assets/figma/raw/story-06.jpeg',
-    matchMedia('(prefers-reduced-motion: reduce)').matches ? 'src/assets/figma/raw/story-first-still.png' : 'src/assets/figma/raw/story-first.gif',
+    'src/assets/figma/raw/story-06-optimized.22164ac35d8d.webp',
+    matchMedia('(prefers-reduced-motion: reduce)').matches ? 'src/assets/figma/raw/story-first-still.png' : (supportsWebP ? 'src/assets/figma/raw/story-first-optimized.314f911edb11.webp' : 'src/assets/figma/raw/story-first.gif'),
     'src/assets/figma/raw/quiz-result-sleigh.png',
-    'src/assets/figma/svg/garland-original.svg',
+    'src/assets/figma/svg/garland-optimized.7ae30fceee27.svg',
   ];
   let finished = false;
   const fail = () => {

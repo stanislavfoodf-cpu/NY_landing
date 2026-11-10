@@ -18,7 +18,7 @@ try {
     assert.equal(await page.locator('main').isVisible(), true);
     await page.close();
   }
-  for (const failedAsset of ['lock.png', 'loader.js']) {
+  for (const failedAsset of ['lock.png', 'loader.js', 'styles.css']) {
     const page = await browser.newPage();
     await page.route(`**/${failedAsset}`, route => route.abort());
     await page.goto(baseUrl, {waitUntil:'load'});
@@ -30,6 +30,7 @@ try {
   await reduced.goto(baseUrl, {waitUntil:'load'});
   await reduced.locator('.page-loader').waitFor({state:'hidden'});
   assert.match(await reduced.locator('.goat-character img').evaluate(img => img.currentSrc), /goat-still\.png$/);
+  assert.equal(await reduced.evaluate(() => performance.getEntriesByType('resource').some(entry => entry.name.includes('main-07.png'))), false);
   await reduced.close();
   const noScript = await browser.newPage({javaScriptEnabled:false});
   await noScript.goto(baseUrl, {waitUntil:'load'});
