@@ -326,3 +326,9 @@ footer div{flex-wrap:wrap}
 .letter-dialog .email-field input:-webkit-autofill:focus{-webkit-background-clip:text;-webkit-text-fill-color:#dce1f2;caret-color:#dce1f2}
 
 .locked-dialog .locked-title{font-size:50px}
+
+/* The first story is a complete composition, including its close icon. */
+.first-story-dialog{width:min(90vw,calc(90dvh * 1180 / 1420),850px);padding:0}
+.first-story-image,.first-story-image img{display:block;width:100%;height:auto}
+.first-story-dialog .close{position:absolute;top:3.8%;left:86%;right:auto;transform:translate(-50%,-50%);width:max(44px,7.2%);height:auto;aspect-ratio:1;border:0;background:transparent}
+.first-story-dialog .close::before,.first-story-dialog .close::after{display:none}

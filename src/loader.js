@@ -12,6 +12,7 @@
     'src/assets/figma/raw/open-window-variants.svg#window4',
     'src/assets/figma/raw/lock.png',
     'src/assets/figma/raw/story-06.jpeg',
+    matchMedia('(prefers-reduced-motion: reduce)').matches ? 'src/assets/figma/raw/story-first-still.png' : 'src/assets/figma/raw/story-first.gif',
     'src/assets/figma/raw/quiz-result-sleigh.png',
     'src/assets/figma/svg/garland-original.svg',
   ];

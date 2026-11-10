@@ -43,7 +43,11 @@ async function fetchWindowStates(){
           analytics('window',{number:state.id,locked:false});
           updateWindow(button,{id:state.id,title:story.title,available:true});
           button.removeAttribute('aria-busy');
-          open(`<div class="story-scene"><h2 id="dialog-title" class="sr-only">${escapeHtml(story.title)}</h2><div class="story-art"></div><p class="ribbon">${escapeHtml(story.line1)}</p>${story.line2?`<p class="ribbon second">${escapeHtml(story.line2)}</p>`:''}${story.letterLink?'<button class="letter-open">Написать себе в будущее</button>':''}</div>`,'story-dialog');
+          if(story.id===1){
+            open(`<h2 id="dialog-title" class="sr-only">${escapeHtml(story.title)}</h2><picture class="first-story-image"><source media="(prefers-reduced-motion: reduce)" srcset="src/assets/figma/raw/story-first-still.png"><img src="src/assets/figma/raw/story-first.gif" alt="Новогодняя встреча друзей. ${escapeHtml(story.line1)} ${escapeHtml(story.line2)}"></picture>`,'story-dialog first-story-dialog');
+          }else{
+            open(`<div class="story-scene"><h2 id="dialog-title" class="sr-only">${escapeHtml(story.title)}</h2><div class="story-art"></div><p class="ribbon">${escapeHtml(story.line1)}</p>${story.line2?`<p class="ribbon second">${escapeHtml(story.line2)}</p>`:''}${story.letterLink?'<button class="letter-open">Написать себе в будущее</button>':''}</div>`,'story-dialog');
+          }
           pendingStory={button,index:state.id-1};
         }catch{button.removeAttribute('aria-busy');open('<h2 id="dialog-title">Не удалось открыть историю</h2><p>Проверьте соединение и попробуйте ещё раз.</p>','locked-dialog')}
       };

@@ -68,12 +68,7 @@ await firstWindow.click();
 await page.getByRole('dialog').waitFor({state:'visible'});
 if (!(await page.getByRole('dialog').isVisible())) issues.push({ scenario: 'story', errors: ['dialog did not open'] });
 if (await firstWindow.evaluate(el=>el.classList.contains('viewed'))) issues.push({ scenario: 'story', errors: ['window changed before the story was closed'] });
-const storyLayers = await page.locator('.story-scene').evaluate(el => {
-  const decoration=getComputedStyle(el,'::after'), text=getComputedStyle(el.querySelector('.ribbon'));
-  const matrix=new DOMMatrix(decoration.transform);
-  return { behind:Number(decoration.zIndex)<Number(text.zIndex), angle:Math.round(Math.atan2(matrix.b,matrix.a)*180/Math.PI), decorative:decoration.pointerEvents==='none' };
-});
-if (!storyLayers.behind || storyLayers.angle !== 45 || !storyLayers.decorative) issues.push({ scenario: 'story garland', errors: ['garland layer or rotation is incorrect'] });
+if (!(await page.locator('.first-story-image img').getAttribute('src')).endsWith('story-first.gif')) issues.push({ scenario: 'first story', errors: ['animated story is missing'] });
 await page.screenshot({ path: 'artifacts/screenshots/story-375.png', fullPage: true });
 await page.keyboard.press('Escape');
 if (!(await firstWindow.evaluate(element => element === document.activeElement))) issues.push({ scenario: 'story', errors: ['focus was not returned'] });
@@ -84,6 +79,14 @@ if (!(await firstWindow.evaluate(el=>el.classList.contains('viewed')))) issues.p
 for (let i = 1; i < 4; i++) {
   const window = page.locator('.window').nth(i);
   await window.click();
+  if (i === 1) {
+    const storyLayers = await page.locator('.story-scene').evaluate(el => {
+      const decoration=getComputedStyle(el,'::after'), text=getComputedStyle(el.querySelector('.ribbon'));
+      const matrix=new DOMMatrix(decoration.transform);
+      return {behind:Number(decoration.zIndex)<Number(text.zIndex),angle:Math.round(Math.atan2(matrix.b,matrix.a)*180/Math.PI),decorative:decoration.pointerEvents==='none'};
+    });
+    if (!storyLayers.behind || storyLayers.angle !== 45 || !storyLayers.decorative) issues.push({scenario:'story garland',errors:['garland layer or rotation is incorrect']});
+  }
   await page.getByRole('button', { name: 'Закрыть' }).click();
   const image = await window.evaluate(el => getComputedStyle(el, '::after').backgroundImage);
   if (!image.includes(`open-window-variants.svg#window${i + 1}`)) issues.push({ scenario: 'window variants', errors: [`missing variant ${i + 1}`] });
