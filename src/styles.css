@@ -324,3 +324,5 @@ footer div{flex-wrap:wrap}
 .letter-dialog .email-field input:-webkit-autofill,
 .letter-dialog .email-field input:-webkit-autofill:hover,
 .letter-dialog .email-field input:-webkit-autofill:focus{-webkit-background-clip:text;-webkit-text-fill-color:#dce1f2;caret-color:#dce1f2}
+
+.locked-dialog .locked-title{font-size:50px}

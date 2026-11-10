@@ -38,7 +38,7 @@ async function fetchWindowStates(){
         try{
           const result=await fetch(`/api/windows/${state.id}/story`,{cache:'no-store'});
           const story=await result.json();
-          if(result.status===423){analytics('window',{number:state.id,locked:true});updateWindow(button,{id:state.id,title:null,available:false,unlockLabel:story.unlockLabel});button.removeAttribute('aria-busy');open(`<h2 id="dialog-title">Здесь пока тихо.</h2><p>Загляните ${escapeHtml(story.unlockLabel)}.</p>`,'locked-dialog');return}
+          if(result.status===423){analytics('window',{number:state.id,locked:true});updateWindow(button,{id:state.id,title:null,available:false,unlockLabel:story.unlockLabel});button.removeAttribute('aria-busy');open(`<h2 id="dialog-title" class="locked-title">Здесь пока тихо.</h2><p>Загляните ${escapeHtml(story.unlockLabel)}.</p>`,'locked-dialog');return}
           if(!result.ok)throw new Error('История недоступна');
           analytics('window',{number:state.id,locked:false});
           updateWindow(button,{id:state.id,title:story.title,available:true});
