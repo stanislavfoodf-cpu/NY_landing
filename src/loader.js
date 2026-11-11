@@ -14,7 +14,6 @@
     'src/assets/figma/raw/open-window-v5-1000.da7c53b5f7b9.webp',
     'src/assets/figma/raw/lock.png',
     'src/assets/figma/raw/story-06-optimized.22164ac35d8d.webp',
-    'src/assets/figma/raw/quiz-result-sleigh.png',
     'src/assets/figma/svg/garland-optimized.7ae30fceee27.svg',
   ];
   if (matchMedia('(max-width: 700px)').matches) resources.push(

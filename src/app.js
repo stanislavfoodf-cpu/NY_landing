@@ -115,7 +115,7 @@ function quiz(){
     answers.forEach((answer,index)=>analytics('quiz',{action:'answer',question:index+1,answer}));
     const id=chooseResult(scoreAnswers(answers),answers),r=results[id-1];
     analytics('result',{id:'R'+id});
-    open(`<p class="result-label">Ваш результат:</p><h2 id="dialog-title" class="result-title">${r[0]}</h2><p class="result-copy">${r[1]}</p><div class="result-art" aria-hidden="true"></div><button id="repeat">Повторить</button>`,'quiz-dialog quiz-result');
+    open(`<p class="result-label">Ваш результат:</p><h2 id="dialog-title" class="result-title">${r[0]}</h2><p class="result-copy">${r[1]}</p><div class="result-art" aria-hidden="true"><img src="src/assets/figma/quiz-results/${id}.webp" alt="" width="1080" height="1080"></div><button id="repeat">Повторить</button>`,'quiz-dialog quiz-result');
     $('#repeat').onclick=quiz;
   };
 }

@@ -279,8 +279,8 @@ footer div{flex-wrap:wrap}
 .quiz-result .result-label{font-size:clamp(20px,6.7cqw,54px)!important;line-height:1;margin:0}
 .quiz-result .result-title{max-width:80%;font-size:clamp(28px,10.2cqw,82px);line-height:.96;margin:0}
 .quiz-result .result-copy{font-size:clamp(14px,3.5cqw,30px)!important;line-height:1.25;margin:0;font-weight:600}
-.quiz-result .result-art{flex:none;position:relative;width:52%;aspect-ratio:1;margin:0;border-radius:50%;background:radial-gradient(circle,#ffffff0c 0 55%,#ffffff07 56% 70%,transparent 71%)}
-.quiz-result .result-art::before{content:'';position:absolute;inset:8%;background:url('assets/figma/raw/quiz-result-sleigh.png') center / contain no-repeat}
+.quiz-result .result-art{flex:none;position:relative;width:78%;aspect-ratio:1;margin:0;border-radius:50%;background:radial-gradient(circle,#ffffff0c 0 55%,#ffffff07 56% 70%,transparent 71%)}
+.quiz-result .result-art img{position:absolute;inset:14%;width:72%;height:72%;object-fit:cover;border-radius:50%}
 .quiz-result #repeat{min-width:0;width:48%;padding:1.5cqw 3cqw;font-size:clamp(16px,4cqw,32px)}
 .quiz-result .close{min-width:0;padding:0}
 @media(max-width:700px){
