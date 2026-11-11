@@ -364,7 +364,7 @@ footer div{flex-wrap:wrap}
   .letter-dialog .letter-field{margin:18px 0 0!important}
   .letter-dialog .letter-field textarea{height:min(280px,calc(63vw - 30.24px))}
   .letter-dialog .letter-hint{font-size:clamp(14px,3.5vw,18px);margin:12px auto 10px}
-  .letter-dialog .consent{font-size:clamp(13px,3.3vw,16px);margin:10px 0}
+  .letter-dialog .consent{font-size:clamp(13px,3.3vw,16px);margin:15px 0}
   .letter-dialog form button{min-width:0;width:min(100%,220px);margin-top:10px;font-size:clamp(16px,4vw,20px);padding:8px 16px}
   .letter-dialog #letter-status:empty{display:none}
   /* Align the wire, rather than the transparent image bounds, to the panel edges. */
@@ -389,3 +389,12 @@ footer div{flex-wrap:wrap}
 .quiz-result .modal-garland__left,.quiz-result .modal-garland__right{top:23.188cqw;bottom:23.188cqw;width:18.84025cqw;background:url('assets/figma/raw/garland-side.37102a4ff72d.png') left top / 100% auto repeat-y}
 .quiz-result .modal-garland__left{left:0}
 .quiz-result .modal-garland__right{right:0;transform:scaleX(-1)}
+
+/* Overlap the side slices with the rounded ends and fade their cut edges. */
+.modal-garland__top,.modal-garland__bottom{z-index:1}
+.modal-garland__left,.modal-garland__right{-webkit-mask-image:linear-gradient(to bottom,transparent,#000 20px,#000 calc(100% - 30px),transparent);mask-image:linear-gradient(to bottom,transparent,#000 20px,#000 calc(100% - 30px),transparent)}
+@media(max-width:700px){
+  .modal-garland__left,.modal-garland__right{top:calc(min(120.578px,23.188vw - 11.13024px) - 14px);bottom:calc(min(120.578px,23.188vw - 11.13024px) - 28px)}
+}
+.quiz-result .modal-garland__left,.quiz-result .modal-garland__right{top:calc(23.188cqw - 14px);bottom:calc(23.188cqw - 28px)}
+.letter-dialog .consent{margin-block:15px}

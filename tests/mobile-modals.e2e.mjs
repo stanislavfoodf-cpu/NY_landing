@@ -21,10 +21,11 @@ try {
         assert.ok(Math.abs(geometry.frameWidth/geometry.w-1.1594)<.01);
         assert.ok(Math.abs((geometry.frameHeight-geometry.h)/geometry.w-.24)<.01);
         assert.ok(Math.abs(geometry.capRatio-320/1600)<.01,'top slice keeps its proportions');
-        assert.ok(geometry.joins.every(distance=>Math.abs(distance)<1),'side slices meet the top and bottom slices');
+        assert.ok(geometry.joins.every((distance,index)=>index%2===0?distance < -10 && distance > -15:distance > 22 && distance < 29),'side slices overlap the top and bottom slices');
         if(height===462){assert.ok(geometry.top>=19,`${type} starts inside short viewport`);assert.ok(geometry.scrollHeight>geometry.clientHeight,`${type} scrolls on short viewport`);}
       }else{assert.ok(Math.abs(geometry.w-geometry.h)<1,`${width} ${type} desktop remains square`);assert.equal(geometry.frameVisible,false);}
       if(type==='letter'){
+        assert.deepEqual(await page.locator('.consent').evaluate(el=>[getComputedStyle(el).marginTop,getComputedStyle(el).marginBottom]),['15px','15px']);
         await page.getByLabel('Ваш email').fill('test@example.com');
         await page.getByLabel('Ваше письмо').fill('Тестовое письмо');
         await page.getByRole('checkbox',{name:'Выражаю согласие на обработку'}).check();
