@@ -354,6 +354,7 @@ footer div{flex-wrap:wrap}
 .modal-garland{display:none}
 @media(max-width:700px){
   .overlay:has(.quiz-survey),.overlay:has(.letter-dialog){padding-block:clamp(50px,14vw,75px)}
+  .quiz-survey .quiz-heading{margin-bottom:15px}
   .quiz-survey,.letter-dialog{width:min(520px,calc(100vw - 48px));height:min(915.91px,calc(176.1364vw - 84.5455px));min-height:0;max-height:none;aspect-ratio:880 / 1550;margin:auto;padding:clamp(58px,16vw,75px) clamp(32px,11vw,65px) clamp(36px,10vw,55px);overflow:visible;isolation:isolate}
   .quiz-survey::after,.letter-dialog::after{content:none}
   .quiz-survey #dialog-content,.letter-dialog #dialog-content{width:100%;height:100%;overflow:auto;overscroll-behavior:contain}
