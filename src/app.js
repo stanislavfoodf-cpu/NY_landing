@@ -18,7 +18,7 @@ const grid=$('#windows'), windowButtons=[];
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
 const storyVideos = {};
 function openFirstStory(story,button){
-  open(`<h2 id="dialog-title" class="sr-only">${escapeHtml(story.title)}</h2><div class="first-story-image"><img src="src/assets/figma/raw/story-first-2026.png" width="1180" height="1420" alt="Новогодняя встреча друзей. ${escapeHtml(story.line1)} ${escapeHtml(story.line2)}"></div>`,'story-dialog first-story-dialog first-story-static');
+  open(`<h2 id="dialog-title" class="sr-only">${escapeHtml(story.title)}</h2><div class="first-story-image"><picture><source media="(min-width: 701px)" srcset="src/assets/figma/raw/story-first-desktop.webp"><img src="src/assets/figma/raw/story-first-2026.png" width="1180" height="1420" alt="Новогодняя встреча друзей. ${escapeHtml(story.line1)} ${escapeHtml(story.line2)}"></picture></div>`,'story-dialog first-story-dialog first-story-static');
   const image=content.querySelector('img');
   const markReady=()=>{if(image.isConnected&&!overlay.hidden)pendingStory={button,index:story.id-1}};
   image.addEventListener('load',markReady,{once:true});
