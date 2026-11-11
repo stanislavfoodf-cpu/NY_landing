@@ -18,8 +18,8 @@ try {
         assert.ok(Math.abs(geometry.h/geometry.w-1550/880)<.02,`${width} ${type} portrait aspect`);
         assert.equal(geometry.frameVisible,true,`${width} ${type} garland visible`);
         assert.equal(geometry.decorative,true,`${width} ${type} garland remains non-interactive`);
-        assert.ok(Math.abs(geometry.frameWidth/geometry.w-1.07)<.01);
-        assert.ok(Math.abs(geometry.frameHeight-geometry.h)<1);
+        assert.ok(Math.abs(geometry.frameWidth/geometry.w-1.1594)<.01);
+        assert.ok(Math.abs((geometry.frameHeight-geometry.h)/geometry.w-.24)<.01);
         assert.ok(Math.abs(geometry.capRatio-320/1600)<.01,'top slice keeps its proportions');
         assert.ok(geometry.joins.every(distance=>Math.abs(distance)<1),'side slices meet the top and bottom slices');
         if(height===462){assert.ok(geometry.top>=19,`${type} starts inside short viewport`);assert.ok(geometry.scrollHeight>geometry.clientHeight,`${type} scrolls on short viewport`);}
@@ -31,11 +31,13 @@ try {
         await dialog.getByRole('button',{name:'Отправить',exact:true}).click();
         assert.match(await page.locator('#letter-status').textContent(),/недоступна/);
       }else{
-        await page.locator('input[name="answer"]').first().check();
-        await page.getByRole('button',{name:'Следующий вопрос'}).click();
-        assert.match(await page.locator('.quiz-progress').textContent(),/2 из 5/);
-        await page.getByRole('button',{name:'Предыдущий вопрос'}).click();
-        assert.equal(await page.locator('input[name="answer"]').first().isChecked(),true);
+        assert.equal(await page.locator('#quiz-form fieldset').count(),5);
+        assert.equal(await page.locator('.quiz-heading').evaluate(el=>getComputedStyle(el).fontSize),'50px');
+        await page.getByRole('button',{name:'Узнать результат'}).click();
+        assert.equal(await page.locator('.quiz-question-error:visible').count(),5);
+        for(let i=0;i<5;i++)await page.locator(`input[name="answer-${i}"]`).first().check();
+        await page.getByRole('button',{name:'Узнать результат'}).click();
+        assert.equal(await page.getByText('Новый год в пижаме').isVisible(),true);
       }
       await page.keyboard.press('Escape');
       assert.equal(await page.locator('#overlay').isHidden(),true);

@@ -323,6 +323,11 @@ footer div{flex-wrap:wrap}
 .letter-dialog .email-field input:-webkit-autofill:focus{-webkit-background-clip:text;-webkit-text-fill-color:#dce1f2;caret-color:#dce1f2}
 
 .locked-dialog .locked-title{font-size:50px}
+.quiz-survey .quiz-heading{font-size:50px}
+.quiz-survey #quiz-form fieldset{margin:0 0 28px}
+.quiz-survey .quiz-question-error{margin:8px 0;color:#f5d9cb;font-size:16px}
+.quiz-survey .quiz-nav{justify-content:center}
+.quiz-survey #quiz-form .quiz-nav #quiz-next{min-width:min(100%,220px);font-size:20px;white-space:normal}
 
 /* The first story is a complete composition, including its close icon. */
 .first-story-dialog{width:min(90vw,calc(90dvh * var(--story-video-ratio, .8309859)),850px);padding:0}
@@ -348,6 +353,7 @@ footer div{flex-wrap:wrap}
 /* Mobile portrait frames use the original garland in proportional slices. */
 .modal-garland{display:none}
 @media(max-width:700px){
+  .overlay:has(.quiz-survey),.overlay:has(.letter-dialog){padding-block:clamp(50px,14vw,75px)}
   .quiz-survey,.letter-dialog{width:min(520px,calc(100vw - 48px));height:min(915.91px,calc(176.1364vw - 84.5455px));min-height:0;max-height:none;aspect-ratio:880 / 1550;margin:auto;padding:clamp(58px,16vw,75px) clamp(32px,11vw,65px) clamp(36px,10vw,55px);overflow:visible;isolation:isolate}
   .quiz-survey::after,.letter-dialog::after{content:none}
   .quiz-survey #dialog-content,.letter-dialog #dialog-content{width:100%;height:100%;overflow:auto;overscroll-behavior:contain}
@@ -359,12 +365,13 @@ footer div{flex-wrap:wrap}
   .letter-dialog .consent{font-size:clamp(13px,3.3vw,16px);margin:10px 0}
   .letter-dialog form button{min-width:0;width:min(100%,220px);margin-top:10px;font-size:clamp(16px,4vw,20px);padding:8px 16px}
   .letter-dialog #letter-status:empty{display:none}
-  .modal-garland{display:block;position:absolute;z-index:0;pointer-events:none;left:-3.5%;width:107%;top:0;bottom:0}
+  /* Align the wire, rather than the transparent image bounds, to the panel edges. */
+  .modal-garland{display:block;position:absolute;z-index:0;pointer-events:none;left:-7.97%;width:115.94%;top:max(-62.4px,calc(-12vw + 5.76px));bottom:max(-62.4px,calc(-12vw + 5.76px))}
   .modal-garland span{display:block;position:absolute;pointer-events:none}
   .modal-garland__top,.modal-garland__bottom{left:0;width:100%;aspect-ratio:1600 / 320;background:url('assets/figma/raw/garland-top.606f0ab9668c.png') center / 100% 100% no-repeat}
   .modal-garland__top{top:0}
   .modal-garland__bottom{bottom:0;transform:scaleY(-1)}
-  .modal-garland__left,.modal-garland__right{top:min(111.28px,calc(21.4vw - 10.272px));bottom:min(111.28px,calc(21.4vw - 10.272px));width:min(90.415px,calc(17.3875vw - 8.346px));background:url('assets/figma/raw/garland-side.37102a4ff72d.png') left top / 100% auto repeat-y}
+  .modal-garland__left,.modal-garland__right{top:min(120.578px,calc(23.188vw - 11.13024px));bottom:min(120.578px,calc(23.188vw - 11.13024px));width:min(97.965px,calc(18.84025vw - 9.04332px));background:url('assets/figma/raw/garland-side.37102a4ff72d.png') left top / 100% auto repeat-y}
   .modal-garland__left{left:0}
   .modal-garland__right{right:0;transform:scaleX(-1)}
 }

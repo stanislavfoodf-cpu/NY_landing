@@ -104,17 +104,10 @@ await page.getByRole('button', { name: 'Закрыть' }).click();
 if (await page.getByRole('dialog').isVisible()) issues.push({ scenario: 'quiz close', errors: ['close button did not close dialog'] });
 await page.getByRole('button', { name: 'Пройти квиз' }).click();
 await page.screenshot({ path: 'artifacts/screenshots/quiz-375.png', fullPage: true });
-for (let i = 0; i < 5; i++) {
-  const portraitRatio = await page.getByRole('dialog').evaluate(el => { const r = el.getBoundingClientRect(); return r.height/r.width; });
-  if (Math.abs(portraitRatio - 1550/880) > .02) issues.push({ scenario: 'quiz portrait', errors: [`unexpected aspect ratio ${portraitRatio}`] });
-  await page.locator('input[name="answer"]').first().check();
-  if (i === 1) {
-    await page.getByRole('button', { name: 'Предыдущий вопрос' }).click();
-    if (!(await page.locator('input[name="answer"]').first().isChecked())) issues.push({ scenario: 'quiz back', errors: ['answer was not retained'] });
-    await page.getByRole('button', { name: 'Следующий вопрос' }).click();
-  }
-  await page.getByRole('button', { name: i === 4 ? 'Узнать результат' : 'Следующий вопрос' }).click();
-}
+const portraitRatio = await page.getByRole('dialog').evaluate(el => { const r = el.getBoundingClientRect(); return r.height/r.width; });
+if (Math.abs(portraitRatio - 1550/880) > .02) issues.push({ scenario: 'quiz portrait', errors: [`unexpected aspect ratio ${portraitRatio}`] });
+for (let i = 0; i < 5; i++) await page.locator(`input[name="answer-${i}"]`).first().check();
+await page.getByRole('button', { name: 'Узнать результат' }).click();
 if (!(await page.getByText('Новый год в пижаме').isVisible())) issues.push({ scenario: 'quiz', errors: ['unexpected result'] });
 await page.screenshot({ path: 'artifacts/screenshots/quiz-result-375.png', fullPage: true });
 await page.keyboard.press('Escape');
