@@ -105,8 +105,8 @@ if (await page.getByRole('dialog').isVisible()) issues.push({ scenario: 'quiz cl
 await page.getByRole('button', { name: 'Пройти квиз' }).click();
 await page.screenshot({ path: 'artifacts/screenshots/quiz-375.png', fullPage: true });
 for (let i = 0; i < 5; i++) {
-  const square = await page.getByRole('dialog').evaluate(el => { const r = el.getBoundingClientRect(); return Math.abs(r.width - r.height); });
-  if (square > 1) issues.push({ scenario: 'quiz square', errors: [`width and height differ by ${square}px`] });
+  const portraitRatio = await page.getByRole('dialog').evaluate(el => { const r = el.getBoundingClientRect(); return r.height/r.width; });
+  if (Math.abs(portraitRatio - 1550/880) > .02) issues.push({ scenario: 'quiz portrait', errors: [`unexpected aspect ratio ${portraitRatio}`] });
   await page.locator('input[name="answer"]').first().check();
   if (i === 1) {
     await page.getByRole('button', { name: 'Предыдущий вопрос' }).click();
@@ -129,8 +129,8 @@ const emailAlignment = await page.locator('.email-field').evaluate(element => {
   return { labelRight: label.right, inputLeft: input.left, labelMid: (label.top + label.bottom) / 2, inputMid: (input.top + input.bottom) / 2, inputWidth: input.width };
 });
 if (emailAlignment.inputLeft < emailAlignment.labelRight || Math.abs(emailAlignment.labelMid - emailAlignment.inputMid) > 7 || emailAlignment.inputWidth < 80) issues.push({ scenario: 'letter email layout', errors: ['label and email input are not aligned on one row'] });
-const letterGeometry = await page.getByRole('dialog').evaluate(el => { const dialog=el.getBoundingClientRect(), field=el.querySelector('textarea').getBoundingClientRect(), content=el.querySelector('#dialog-content'); return { square:Math.abs(dialog.width-dialog.height), contained:field.left>=dialog.left && field.right<=dialog.right, clipped:getComputedStyle(content).overflowY === 'auto' && content.getBoundingClientRect().bottom<=dialog.bottom }; });
-if (letterGeometry.square > 1 || !letterGeometry.contained || !letterGeometry.clipped) issues.push({ scenario: 'letter geometry', errors: ['letter field is outside the square'] });
+const letterGeometry = await page.getByRole('dialog').evaluate(el => { const dialog=el.getBoundingClientRect(), field=el.querySelector('textarea').getBoundingClientRect(), content=el.querySelector('#dialog-content'); return { ratio:dialog.height/dialog.width, contained:field.left>=dialog.left && field.right<=dialog.right, clipped:getComputedStyle(content).overflowY === 'auto' && content.getBoundingClientRect().bottom<=dialog.bottom }; });
+if (Math.abs(letterGeometry.ratio - 1550/880) > .02 || !letterGeometry.contained || !letterGeometry.clipped) issues.push({ scenario: 'letter geometry', errors: ['letter field is outside the portrait dialog'] });
 await page.getByRole('dialog').getByRole('button', { name: 'Отправить', exact: true }).click();
 if ((await page.locator('#letter-error').textContent()) !== 'Напишите письмо.') issues.push({ scenario: 'letter', errors: ['letter validation missing'] });
 const consent = page.getByRole('checkbox', { name: 'Выражаю согласие на обработку' });

@@ -17,6 +17,10 @@
     'src/assets/figma/raw/quiz-result-sleigh.png',
     'src/assets/figma/svg/garland-optimized.7ae30fceee27.svg',
   ];
+  if (matchMedia('(max-width: 700px)').matches) resources.push(
+    'src/assets/figma/raw/garland-top.606f0ab9668c.png',
+    'src/assets/figma/raw/garland-side.37102a4ff72d.png',
+  );
   let finished = false;
   const fail = () => {
     if (finished) return;
