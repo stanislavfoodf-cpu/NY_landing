@@ -97,3 +97,53 @@ test('static compression negotiates encoding and immutable cache is limited to f
     });
   } finally { await rm(folder,{recursive:true,force:true}); }
 });
+
+test('MP4 responses support byte ranges needed for video playback and seeking', async () => {
+  const assetsRoot=join(dirname(fileURLToPath(import.meta.url)),'../src/assets');
+  const folder=await mkdtemp(join(assetsRoot,'video-test-'));
+  const payload=Buffer.from('0123456789');
+  const filename=`story.${createHash('sha256').update(payload).digest('hex').slice(0,12)}.mp4`;
+  try {
+    await writeFile(join(folder,filename),payload);
+    await withServer({current:'2026-11-10T00:00:00Z'},async base=>{
+      const url=`${base}/src/assets/${basename(folder)}/${filename}`;
+      const full=await rawGet(url);
+      assert.equal(full.status,200);
+      assert.equal(full.headers['content-type'],'video/mp4');
+      assert.equal(full.headers['accept-ranges'],'bytes');
+      assert.equal(full.headers['cache-control'],'public, max-age=31536000, immutable');
+      assert.deepEqual(full.body,payload);
+      for (const [header,expected,contentRange] of [
+        ['bytes=2-5','2345','bytes 2-5/10'],
+        ['bytes=7-','789','bytes 7-9/10'],
+        ['bytes=-3','789','bytes 7-9/10'],
+        ['bytes=8-99999999999999999999','89','bytes 8-9/10'],
+      ]) {
+        const part=await rawGet(url,{Range:header});
+        assert.equal(part.status,206,header);
+        assert.equal(part.headers['content-range'],contentRange);
+        assert.equal(Number(part.headers['content-length']),expected.length);
+        assert.equal(part.body.toString(),expected);
+      }
+      for (const range of ['bytes=10-','bytes=-0']) {
+        const missing=await rawGet(url,{Range:range});
+        assert.equal(missing.status,416);
+        assert.equal(missing.headers['content-range'],'bytes */10');
+        assert.equal(missing.body.length,0);
+      }
+      for (const range of ['bytes=0-1,4-5','bytes=5-3','items=0-2']) {
+        const ignored=await rawGet(url,{Range:range});
+        assert.equal(ignored.status,200);
+        assert.deepEqual(ignored.body,payload);
+      }
+      const ifRange=await rawGet(url,{Range:'bytes=0-1','If-Range':'"unknown"'});
+      assert.equal(ifRange.status,200);
+      assert.deepEqual(ifRange.body,payload);
+      const head=await fetch(url,{method:'HEAD',headers:{Range:'bytes=0-1'}});
+      assert.equal(head.status,200);
+      assert.equal(head.headers.get('content-length'),'10');
+      assert.equal(head.headers.get('accept-ranges'),'bytes');
+      assert.equal((await head.arrayBuffer()).byteLength,0);
+    });
+  } finally { await rm(folder,{recursive:true,force:true}); }
+});

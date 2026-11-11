@@ -325,10 +325,22 @@ footer div{flex-wrap:wrap}
 .locked-dialog .locked-title{font-size:50px}
 
 /* The first story is a complete composition, including its close icon. */
-.first-story-dialog{width:min(90vw,calc(90dvh * 1180 / 1420),850px);padding:0}
+.first-story-dialog{width:min(90vw,calc(90dvh * var(--story-video-ratio, .8309859)),850px);padding:0}
 .first-story-image,.first-story-image img{display:block;width:100%;height:auto}
 .first-story-dialog .close{position:absolute;top:3.8%;left:86%;right:auto;transform:translate(-50%,-50%);width:max(44px,7.2%);height:auto;aspect-ratio:1;border:0;background:transparent}
 .first-story-dialog .close::before,.first-story-dialog .close::after{display:none}
+.story-video-frame{position:relative;aspect-ratio:var(--story-video-ratio, .8309859);background:#071126}
+.story-video-frame video{display:block;width:100%;height:100%;object-fit:contain}
+.story-video-status{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:35px;background:#071126e8;color:white}
+.story-video-status[hidden]{display:none}
+.story-video-status p{max-width:24em;margin:0;font-size:clamp(16px,2vw,22px)}
+.story-video-spinner{width:38px;height:38px;border:3px solid #ffffff66;border-top-color:#fff;border-radius:50%;animation:story-video-spin .8s linear infinite}
+.dialog .story-video-frame .story-video-status button,.dialog .story-video-frame .story-video-sound{min-width:0;border:1px solid white;border-radius:24px;background:#293b70e8;color:white;padding:7px 12px;font-size:clamp(12px,1vw,16px);line-height:1.2}
+.story-video-sound{position:absolute;left:6%;bottom:5%;z-index:2}
+.first-story-dialog.is-video-loading .close{border:2px solid white;border-radius:12px;background:#07112666}
+.first-story-dialog.is-video-loading .close::before,.first-story-dialog.is-video-loading .close::after{display:block}
+@keyframes story-video-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.story-video-spinner{animation:none!important}}
 
 @media (min-resolution:2dppx), (min-width:1994px){body{--house-source:url('assets/figma/raw/house-v6-6144.9a89f03787ff.webp')}}
 @media (min-resolution:3dppx){body{--house-source:url('assets/figma/raw/house-v6-full.6855b7765f19.webp')}}

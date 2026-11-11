@@ -10,11 +10,33 @@ if(typeof document!=='undefined'){
 const $=s=>document.querySelector(s), overlay=$('#overlay'), dialog=$('.dialog'), content=$('#dialog-content');let previous,answers=[],step=0,pendingStory=null;
 const analytics=(type,detail={})=>document.dispatchEvent(new CustomEvent('sk-ny:analytics',{detail:{type,...detail}}));
 function markStoryViewed(){if(!pendingStory)return;const {button,index}=pendingStory;button.classList.add('viewed');if(!button.getAttribute('aria-label').includes('просмотрено'))button.setAttribute('aria-label',button.getAttribute('aria-label')+', просмотрено');try{sessionStorage.setItem('window-v5-'+index,'1')}catch{}pendingStory=null;}
-function open(html,kind=''){if(!overlay.hidden&&dialog.classList.contains('story-dialog')&&kind!=='story-dialog')markStoryViewed();if(overlay.hidden)previous=document.activeElement;content.innerHTML=html;content.scrollTop=0;dialog.className='dialog '+kind;overlay.hidden=false;dialog.scrollTop=0;document.body.classList.add('modal-open');dialog.focus();}
-function close(){if(dialog.classList.contains('story-dialog'))markStoryViewed();overlay.hidden=true;document.body.classList.remove('modal-open');previous?.focus();}
-$('.close').onclick=close;overlay.addEventListener('click',e=>{if(e.target===overlay)close()});document.addEventListener('keydown',e=>{if(overlay.hidden)return;if(e.key==='Escape')close();if(e.key==='Tab'){const items=[...dialog.querySelectorAll('button:not([disabled]),input,textarea,[href]')];if(!items.length)return;const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
+function releaseStoryVideo(){const video=content.querySelector('video.story-video');if(video){video.pause();video.removeAttribute('src');video.load();}}
+function open(html,kind=''){if(!overlay.hidden&&dialog.classList.contains('story-dialog')&&kind!=='story-dialog')markStoryViewed();if(overlay.hidden)previous=document.activeElement;releaseStoryVideo();content.innerHTML=html;content.scrollTop=0;dialog.className='dialog '+kind;overlay.hidden=false;dialog.scrollTop=0;document.body.classList.add('modal-open');dialog.focus();}
+function close(){if(dialog.classList.contains('story-dialog'))markStoryViewed();overlay.hidden=true;releaseStoryVideo();document.body.classList.remove('modal-open');previous?.focus();}
+$('.close').onclick=close;overlay.addEventListener('click',e=>{if(e.target===overlay)close()});document.addEventListener('keydown',e=>{if(overlay.hidden)return;if(e.key==='Escape')close();if(e.key==='Tab'){const items=[...dialog.querySelectorAll('button:not([disabled]),input,textarea,[href]')].filter(item=>item.getClientRects().length&&getComputedStyle(item).visibility!=='hidden');if(!items.length)return;const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
 const grid=$('#windows'), windowButtons=[];
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
+const storyVideos = {1:'src/assets/figma/raw/story-first-video.fe35b07abf80.mp4'};
+function openVideoStory(story,button){
+  const description=`Новогодняя встреча друзей. ${story.line1} ${story.line2}`;
+  open(`<h2 id="dialog-title" class="sr-only">${escapeHtml(story.title)}</h2><div class="first-story-image story-video-frame"><video class="story-video" playsinline loop preload="auto" aria-label="${escapeHtml(description)}"></video><div class="story-video-status" role="status" aria-live="polite"><span class="story-video-spinner" aria-hidden="true"></span><p class="story-video-message">Загружаем историю…</p><button class="story-video-retry" type="button" hidden>Попробовать снова</button><button class="story-video-play" type="button" hidden>Воспроизвести видео</button></div><button class="story-video-sound" type="button" hidden>Выключить звук</button></div>`,'story-dialog first-story-dialog');
+  const video=content.querySelector('.story-video'),status=content.querySelector('.story-video-status'),message=content.querySelector('.story-video-message'),spinner=content.querySelector('.story-video-spinner'),retry=content.querySelector('.story-video-retry'),playButton=content.querySelector('.story-video-play'),soundButton=content.querySelector('.story-video-sound');
+  dialog.style.removeProperty('--story-video-ratio');
+  const active=()=>video.isConnected&&!overlay.hidden;
+  const loading=()=>{if(!active())return;dialog.classList.add('is-video-loading');status.hidden=false;spinner.hidden=false;message.textContent='Загружаем историю…';retry.hidden=true;playButton.hidden=true;};
+  const failure=()=>{if(!active())return;dialog.classList.add('is-video-loading');status.hidden=false;spinner.hidden=true;message.textContent='Не удалось загрузить видео. Проверьте соединение и попробуйте снова.';retry.hidden=false;playButton.hidden=true;soundButton.hidden=true;};
+  const syncSound=()=>{soundButton.textContent=video.muted?'Включить звук':'Выключить звук';};
+  const play=async()=>{try{await video.play();}catch(error){if(!active()||error.name==='AbortError')return;if(error.name==='NotAllowedError'&&!video.muted){video.muted=true;syncSound();try{await video.play();return;}catch(second){if(!active()||second.name==='AbortError')return;}}if(!active())return;if(video.error){failure();return;}dialog.classList.add('is-video-loading');status.hidden=false;spinner.hidden=true;message.textContent='';retry.hidden=true;playButton.hidden=false;}};
+  video.addEventListener('playing',()=>{if(!active())return;status.hidden=true;dialog.classList.remove('is-video-loading');soundButton.hidden=false;syncSound();pendingStory={button,index:story.id-1};});
+  video.addEventListener('waiting',loading);
+  video.addEventListener('error',failure);
+  video.addEventListener('loadedmetadata',()=>{if(active()&&video.videoWidth&&video.videoHeight)dialog.style.setProperty('--story-video-ratio',String(video.videoWidth/video.videoHeight));});
+  video.addEventListener('loadeddata',()=>{if(active()&&matchMedia('(prefers-reduced-motion: reduce)').matches&&video.paused){dialog.classList.add('is-video-loading');status.hidden=false;spinner.hidden=true;message.textContent='';playButton.hidden=false;}});
+  retry.addEventListener('click',()=>{loading();video.load();play();});
+  playButton.addEventListener('click',()=>{loading();play();});
+  soundButton.addEventListener('click',()=>{video.muted=!video.muted;syncSound();});
+  loading();video.src=storyVideos[story.id];video.load();if(!matchMedia('(prefers-reduced-motion: reduce)').matches)play();
+}
 function updateWindow(button,state){
   const locked=!state.available;
   button.classList.toggle('locked',locked);
@@ -43,12 +65,12 @@ async function fetchWindowStates(){
           analytics('window',{number:state.id,locked:false});
           updateWindow(button,{id:state.id,title:story.title,available:true});
           button.removeAttribute('aria-busy');
-          if(story.id===1){
-            open(`<h2 id="dialog-title" class="sr-only">${escapeHtml(story.title)}</h2><picture class="first-story-image"><source media="(prefers-reduced-motion: reduce)" srcset="src/assets/figma/raw/story-first-still.png"><source type="image/webp" srcset="src/assets/figma/raw/story-first-optimized.314f911edb11.webp"><img src="src/assets/figma/raw/story-first.gif" alt="Новогодняя встреча друзей. ${escapeHtml(story.line1)} ${escapeHtml(story.line2)}"></picture>`,'story-dialog first-story-dialog');
+          if(storyVideos[story.id]){
+            openVideoStory(story,button);
           }else{
             open(`<div class="story-scene"><h2 id="dialog-title" class="sr-only">${escapeHtml(story.title)}</h2><div class="story-art"></div><p class="ribbon">${escapeHtml(story.line1)}</p>${story.line2?`<p class="ribbon second">${escapeHtml(story.line2)}</p>`:''}${story.letterLink?'<button class="letter-open">Написать себе в будущее</button>':''}</div>`,'story-dialog');
+            pendingStory={button,index:state.id-1};
           }
-          pendingStory={button,index:state.id-1};
         }catch{button.removeAttribute('aria-busy');open('<h2 id="dialog-title">Не удалось открыть историю</h2><p>Проверьте соединение и попробуйте ещё раз.</p>','locked-dialog')}
       };
     }
