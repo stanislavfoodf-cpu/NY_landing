@@ -16,7 +16,14 @@ function close(){if(dialog.classList.contains('story-dialog'))markStoryViewed();
 $('.close').onclick=close;overlay.addEventListener('click',e=>{if(e.target===overlay)close()});document.addEventListener('keydown',e=>{if(overlay.hidden)return;if(e.key==='Escape')close();if(e.key==='Tab'){const items=[...dialog.querySelectorAll('button:not([disabled]),input,textarea,[href]')].filter(item=>item.getClientRects().length&&getComputedStyle(item).visibility!=='hidden');if(!items.length)return;const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
 const grid=$('#windows'), windowButtons=[];
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
-const storyVideos = {1:'src/assets/figma/raw/story-first-video.fe35b07abf80.mp4'};
+const storyVideos = {};
+function openFirstStory(story,button){
+  open(`<h2 id="dialog-title" class="sr-only">${escapeHtml(story.title)}</h2><div class="first-story-image"><img src="src/assets/figma/raw/story-first-2026.png" width="1180" height="1420" alt="Новогодняя встреча друзей. ${escapeHtml(story.line1)} ${escapeHtml(story.line2)}"></div>`,'story-dialog first-story-dialog first-story-static');
+  const image=content.querySelector('img');
+  const markReady=()=>{if(image.isConnected&&!overlay.hidden)pendingStory={button,index:story.id-1}};
+  image.addEventListener('load',markReady,{once:true});
+  if(image.complete&&image.naturalWidth)markReady();
+}
 function openVideoStory(story,button){
   const description=`Новогодняя встреча друзей. ${story.line1} ${story.line2}`;
   open(`<h2 id="dialog-title" class="sr-only">${escapeHtml(story.title)}</h2><div class="first-story-image story-video-frame"><video class="story-video" playsinline loop preload="auto" aria-label="${escapeHtml(description)}"></video><div class="story-video-status" role="status" aria-live="polite"><span class="story-video-spinner" aria-hidden="true"></span><p class="story-video-message">Загружаем историю…</p><button class="story-video-retry" type="button" hidden>Попробовать снова</button><button class="story-video-play" type="button" hidden>Воспроизвести видео</button></div><button class="story-video-sound" type="button" hidden>Выключить звук</button></div>`,'story-dialog first-story-dialog');
@@ -65,7 +72,9 @@ async function fetchWindowStates(){
           analytics('window',{number:state.id,locked:false});
           updateWindow(button,{id:state.id,title:story.title,available:true});
           button.removeAttribute('aria-busy');
-          if(storyVideos[story.id]){
+          if(story.id===1){
+            openFirstStory(story,button);
+          }else if(storyVideos[story.id]){
             openVideoStory(story,button);
           }else{
             open(`<div class="story-scene"><h2 id="dialog-title" class="sr-only">${escapeHtml(story.title)}</h2><div class="story-art"></div><p class="ribbon">${escapeHtml(story.line1)}</p>${story.line2?`<p class="ribbon second">${escapeHtml(story.line2)}</p>`:''}${story.letterLink?'<button class="letter-open">Написать себе в будущее</button>':''}</div>`,'story-dialog');
