@@ -24,8 +24,8 @@ const stories = [
 ];
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
-const exposedFiles = new Set(['index.html', 'src/app.js', 'src/loader.js', 'src/styles.css']);
-const mime = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.svg':'image/svg+xml', '.png':'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.gif':'image/gif', '.webp':'image/webp', '.mp4':'video/mp4', '.ttf':'font/ttf', '.woff':'font/woff', '.woff2':'font/woff2' };
+const exposedFiles = new Set(['index.html', 'robots.txt', 'src/app.js', 'src/loader.js', 'src/styles.css']);
+const mime = { '.html':'text/html; charset=utf-8', '.txt':'text/plain; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.svg':'image/svg+xml', '.png':'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.gif':'image/gif', '.webp':'image/webp', '.mp4':'video/mp4', '.ttf':'font/ttf', '.woff':'font/woff', '.woff2':'font/woff2' };
 const moscowFormatter = new Intl.DateTimeFormat('en-CA', {timeZone:'Europe/Moscow', year:'numeric', month:'2-digit', day:'2-digit'});
 const available = (story, date) => !story[3] || date >= story[3];
 const compressible = new Set(['.html', '.js', '.css', '.svg']);
@@ -72,6 +72,7 @@ function json(res, status, body, head = false) {
 
 export function createLandingServer({now = () => new Date()} = {}) {
   return createServer(async (req, res) => {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow');
     const head = req.method === 'HEAD';
     if (req.method !== 'GET' && !head) {
       res.writeHead(405, {'Allow':'GET, HEAD', 'Cache-Control':'no-store'});

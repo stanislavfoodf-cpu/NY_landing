@@ -50,6 +50,21 @@ test('static server exposes only the site and never server source or tests', asy
   });
 });
 
+test('landing and its resources signal that they should not be indexed', async () => {
+  await withServer({current:'2026-11-10T00:00:00Z'}, async base => {
+    for (const path of ['/','/index.html','/src/assets/figma/raw/lock.png']) {
+      const response=await fetch(base+path);
+      assert.equal(response.status,200);
+      assert.equal(response.headers.get('x-robots-tag'),'noindex, nofollow');
+      if(path==='/') assert.match(await response.text(),/<meta\s+name="robots"\s+content="noindex,\s*nofollow"/i);
+    }
+    const robots=await fetch(`${base}/robots.txt`);
+    assert.equal(robots.status,200);
+    assert.match(robots.headers.get('content-type'),/^text\/plain/);
+    assert.match(await robots.text(),/User-agent:\s*\*[\s\S]*Allow:\s*\//i);
+  });
+});
+
 function rawGet(url, headers = {}) {
   return new Promise((resolve, reject) => {
     get(url, {headers}, response => {
