@@ -71,7 +71,7 @@ await page.getByRole('dialog').waitFor({state:'visible'});
 if (!(await page.getByRole('dialog').isVisible())) issues.push({ scenario: 'story', errors: ['dialog did not open'] });
 if (await firstWindow.evaluate(el=>el.classList.contains('viewed'))) issues.push({ scenario: 'story', errors: ['window changed before the story was closed'] });
 await page.locator('.first-story-static img').evaluate(img=>img.decode());
-if (!(await page.locator('.first-story-static img').getAttribute('src')).includes('story-first-2026.png')) issues.push({ scenario: 'first story', errors: ['story image is missing'] });
+if (!(await page.locator('.first-story-static img').getAttribute('src')).includes('story-first-desktop.webp')) issues.push({ scenario: 'first story', errors: ['story image is missing'] });
 await page.screenshot({ path: 'artifacts/screenshots/story-375.png', fullPage: true });
 await page.keyboard.press('Escape');
 if (!(await firstWindow.evaluate(element => element === document.activeElement))) issues.push({ scenario: 'story', errors: ['focus was not returned'] });

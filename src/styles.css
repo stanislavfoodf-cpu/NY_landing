@@ -341,7 +341,9 @@ footer div{flex-wrap:wrap}
 @media(max-width:700px){
   .overlay:has(.first-story-static){padding-inline:0}
   .first-story-static{width:100vw;max-width:none}
-  .first-story-static .close{left:86%}
+  .first-story-static .first-story-image{overflow:hidden}
+  .first-story-static .first-story-image img{width:137.627%;max-width:none;margin-left:-18.814%}
+  .first-story-static .close{left:91.9%}
 }
 .story-video-frame{position:relative;aspect-ratio:var(--story-video-ratio, .8309859);background:#071126}
 .story-video-frame video{display:block;width:100%;height:100%;object-fit:contain}

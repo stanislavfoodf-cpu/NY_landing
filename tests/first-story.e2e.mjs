@@ -13,11 +13,12 @@ try{
     const window=page.locator('.window').first();await window.focus();await page.keyboard.press('Enter');
     const dialog=page.locator('.first-story-static');await dialog.waitFor({state:'visible'});
     const image=dialog.locator('img');await image.evaluate(el=>el.decode());
-    assert.equal(await image.evaluate(el=>el.naturalWidth),width<=700?1180:1624);
+    assert.equal(await image.evaluate(el=>el.naturalWidth),1624);
     assert.equal(await dialog.locator('video').count(),0);
-    assert.ok(requests.some(url=>url.includes(width<=700?'story-first-2026.png':'story-first-desktop.webp')));
+    assert.ok(requests.some(url=>url.includes('story-first-desktop.webp')));
+    assert.ok(!requests.some(url=>url.includes('story-first-2026.png')));
     assert.ok(!requests.some(url=>url.includes('.mp4')));
-    if(width<=700){await page.waitForTimeout(400);const box=await image.boundingBox();assert.ok(Math.abs(box.x)<1 && Math.abs(box.width-width)<1,'mobile image reaches both screen edges');}
+    if(width<=700){await page.waitForTimeout(400);const box=await image.boundingBox(),clip=await dialog.locator('.first-story-image').boundingBox();assert.ok(Math.abs(clip.x)<1 && Math.abs(clip.width-width)<1 && box.x<0 && box.x+box.width>width,'mobile image is cropped past both screen edges');}
     assert.equal(await window.evaluate(el=>el.classList.contains('viewed')),false);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0);
     assert.equal(await dialog.getByRole('button',{name:'Закрыть'}).isVisible(),true);
