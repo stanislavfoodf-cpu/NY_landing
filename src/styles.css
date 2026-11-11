@@ -97,6 +97,7 @@ footer small{opacity:.5}
 @keyframes arrive{from{opacity:0;transform:scale(.85)}
 to{opacity:1;transform:scale(1)}
 }
+
 @media(min-width:1100px){body{background-size:154.07vw 164.42vw;background-position:center max(-513px,-26.72vw)}.house{width:100%;height:126.98vw;max-height:2438px;margin-left:0;aspect-ratio:auto}.windows{left:calc(50% - 17.1523vw);top:calc(59.6888vw + max(-513px,-26.72vw));width:33.9034vw;height:38.3714vw}.house-animation{left:32.6%;top:16.24%;width:36%;height:10.13%}.house-arrow-goat{left:37.5%;top:58.5%;width:3.7%}.house-arrow-mail{left:55.3%;top:66.3%;width:7.5%}.cards{margin:-31vw auto 0}.ending{padding:36px 20px 10px}footer{padding:24px 20px}}
 @media(min-width:1921px){.house{max-height:none;top:calc(26.72vw - 513px)}.windows{top:32.9688vw}}
 @media(min-width:701px) and (max-width:1099px){.house-arrow-goat{left:39.1%;top:57%;width:3%}.house-arrow-mail{left:56.2%}}
@@ -376,3 +377,15 @@ footer div{flex-wrap:wrap}
   .modal-garland__left{left:0}
   .modal-garland__right{right:0;transform:scaleX(-1)}
 }
+
+/* Keep the result garland proportional and align its wire to the panel edges. */
+.quiz-result{--result-width:min(802px,calc(100vw - 48px),calc((100dvh - 144px) * .5624));overflow:visible;isolation:isolate}
+.quiz-result .close{z-index:3}
+.quiz-result .modal-garland{display:block;position:absolute;z-index:0;pointer-events:none;left:-7.97%;width:115.94%;top:-12cqw;bottom:-12cqw}
+.quiz-result .modal-garland span{display:block;position:absolute;pointer-events:none}
+.quiz-result .modal-garland__top,.quiz-result .modal-garland__bottom{left:0;width:100%;aspect-ratio:1600 / 320;background:url('assets/figma/raw/garland-top.606f0ab9668c.png') center / 100% 100% no-repeat}
+.quiz-result .modal-garland__top{top:0}
+.quiz-result .modal-garland__bottom{bottom:0;transform:scaleY(-1)}
+.quiz-result .modal-garland__left,.quiz-result .modal-garland__right{top:23.188cqw;bottom:23.188cqw;width:18.84025cqw;background:url('assets/figma/raw/garland-side.37102a4ff72d.png') left top / 100% auto repeat-y}
+.quiz-result .modal-garland__left{left:0}
+.quiz-result .modal-garland__right{right:0;transform:scaleX(-1)}
