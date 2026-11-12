@@ -9,11 +9,13 @@ try {
     await page.goto(base,{waitUntil:'networkidle',timeout:60000});
     const geometry=await page.evaluate(()=>{
       const body=getComputedStyle(document.body),size=body.backgroundSize.split(',')[0].split(' ').map(parseFloat),position=body.backgroundPosition.split(',')[0].split(' '),goat=document.querySelector('.goat-character img'),roof=document.querySelector('.house-animation img'),box=goat.getBoundingClientRect();
-      return {seatX:box.left+scrollX+box.width*.327,seatY:box.top+scrollY+box.height*.652,giftX:(innerWidth-size[0])/2+size[0]*.439,giftY:parseFloat(position[1])+size[1]*.6873,houseWidth:size[0],goat:goat.currentSrc,goatLoaded:goat.naturalWidth,roof:roof.currentSrc,roofLoaded:roof.naturalWidth,overflow:document.documentElement.scrollWidth-innerWidth};
+      const arrow=document.querySelector('.house-arrow-goat'),arrowStyle=getComputedStyle(arrow),arrowWidth=parseFloat(arrowStyle.width),arrowHeight=parseFloat(arrowStyle.height),origin=arrowStyle.transformOrigin.split(' ').map(parseFloat),matrix=new DOMMatrix(arrowStyle.transform),tip=new DOMPoint(arrowWidth*59.15/70.8207-origin[0],arrowHeight*94.28/95.7832-origin[1]).matrixTransform(matrix),parent=arrow.offsetParent.getBoundingClientRect();
+      return {seatX:box.left+scrollX+box.width*.327,seatY:box.top+scrollY+box.height*.652,giftX:(innerWidth-size[0])/2+size[0]*.439,giftY:parseFloat(position[1])+size[1]*.6873,headX:box.left+box.width*.35,headY:box.top+box.height*.22,tipX:parent.left+arrow.offsetLeft+origin[0]+tip.x,tipY:parent.top+arrow.offsetTop+origin[1]+tip.y,houseWidth:size[0],goat:goat.currentSrc,goatLoaded:goat.naturalWidth,roof:roof.currentSrc,roofLoaded:roof.naturalWidth,overflow:document.documentElement.scrollWidth-innerWidth};
     });
     const tolerance=Math.max(2,geometry.houseWidth*.003);
     assert.ok(Math.abs(geometry.seatX-geometry.giftX)<tolerance,`${width}: goat horizontal seat ${JSON.stringify(geometry)}`);
     assert.ok(Math.abs(geometry.seatY-geometry.giftY)<tolerance,`${width}: goat vertical seat ${JSON.stringify(geometry)}`);
+    assert.ok(Math.abs(geometry.tipX-geometry.headX)<2 && Math.abs(geometry.tipY-geometry.headY)<2,`${width}: arrow points to goat's head ${JSON.stringify(geometry)}`);
     assert.match(geometry.goat,/goat-animated\.7a949995fed6140b\.webp/);
     assert.match(geometry.roof,/roof-animated\.ad60364aecdceba0\.webp/);
     assert.equal(geometry.goatLoaded,306);assert.equal(geometry.roofLoaded,1112);

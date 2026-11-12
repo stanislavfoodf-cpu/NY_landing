@@ -42,7 +42,7 @@ try {
         assert.match(await page.locator('#letter-status').textContent(),/недоступна/);
       }else{
         assert.equal(await page.locator('#quiz-form fieldset').count(),5);
-        assert.equal(await page.locator('.quiz-heading').evaluate(el=>getComputedStyle(el).fontSize),'50px');
+        assert.equal(await page.locator('.quiz-heading').evaluate(el=>getComputedStyle(el).fontSize),width<=700?'40px':'50px');
         await page.getByRole('button',{name:'Узнать результат'}).click();
         assert.equal(await page.locator('.quiz-question-error:visible').count(),5);
         for(let i=0;i<5;i++)await page.locator(`input[name="answer-${i}"]`).first().check();

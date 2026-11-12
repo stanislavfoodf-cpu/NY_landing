@@ -366,7 +366,7 @@ footer div{flex-wrap:wrap}
 .modal-garland{display:none}
 @media(max-width:700px){
   .overlay:has(.quiz-survey),.overlay:has(.letter-dialog){padding-block:clamp(50px,14vw,75px)}
-  .quiz-survey .quiz-heading{margin-bottom:15px}
+  .quiz-survey .quiz-heading{font-size:40px;margin-bottom:15px}
   .quiz-survey,.letter-dialog{width:min(520px,calc(100vw - 48px));height:min(915.91px,calc(176.1364vw - 84.5455px));min-height:0;max-height:none;aspect-ratio:880 / 1550;margin:auto;padding:clamp(58px,16vw,75px) clamp(32px,11vw,65px) clamp(36px,10vw,55px);overflow:visible;isolation:isolate}
   .quiz-survey::after,.letter-dialog::after{content:none}
   .quiz-survey #dialog-content,.letter-dialog #dialog-content{width:100%;height:100%;overflow:auto;overscroll-behavior:contain}
@@ -402,9 +402,11 @@ footer div{flex-wrap:wrap}
 .quiz-result .modal-garland__right{right:0;transform:scaleX(-1)}
 
 /* Position the goat by the gift in the background, using the same scale as the house. */
-.goat-character{left:41.94%;top:106.2vw;width:9.6vw;height:auto;aspect-ratio:306 / 544}
-@media(max-width:700px){.goat-character{left:42.2%;top:269.3vw;width:20.8vw}}
-@media(min-width:1100px){.goat-character{left:38.64%;top:79.35vw;width:6vw}}
+.house{--goat-left:41.94%;--goat-top:106.2vw;--goat-width:9.6vw}
+.goat-character{left:var(--goat-left);top:var(--goat-top);width:var(--goat-width);height:auto;aspect-ratio:306 / 544}
+.house-arrow-goat{left:calc(var(--goat-left) - var(--goat-width) * .316);top:calc(var(--goat-top) - var(--goat-width) * .332);width:calc(var(--goat-width) * .65)}
+@media(max-width:700px){.house{--goat-left:42.2%;--goat-top:269.3vw;--goat-width:20.8vw}}
+@media(min-width:1100px){.house{--goat-left:38.64%;--goat-top:79.35vw;--goat-width:6vw}}
 
 /* Overlap the side slices with the rounded ends and fade their cut edges. */
 .modal-garland__top,.modal-garland__bottom{z-index:1}
