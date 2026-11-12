@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createLandingServer } from '../server.mjs';
 import { createHash } from 'node:crypto';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { get } from 'node:http';
 import { dirname, join, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -37,6 +37,29 @@ test('stories unlock at Moscow midnight and unavailable content is never returne
     }
     assert.equal((await fetch(`${base}/api/windows/15/story`)).status,404);
     assert.equal((await fetch(`${base}/api/windows/0/story`)).status,404);
+  });
+});
+
+test('story images match their window and follow the server unlock date', async () => {
+  const clock={current:'2026-12-19T20:59:59Z'};
+  await withServer(clock, async base => {
+    for (let id=1;id<=5;id++) {
+      const response=await fetch(`${base}/api/windows/${id}/image`);
+      assert.equal(response.status,200);
+      assert.match(response.headers.get('content-type'),/^image\/webp/);
+      const expected=await readFile(new URL(`../private/story-images/window-${id}.webp`,import.meta.url));
+      assert.deepEqual(Buffer.from(await response.arrayBuffer()),expected);
+    }
+    assert.equal((await fetch(`${base}/api/windows/6/image`)).status,423);
+    assert.equal((await fetch(`${base}/private/story-images/window-6.webp`)).status,404);
+    assert.equal((await fetch(`${base}/api/windows/7/image`)).status,404);
+    clock.current='2026-12-19T21:00:00Z';
+    const response=await fetch(`${base}/api/windows/6/image`);
+    assert.equal(response.status,200);
+    assert.deepEqual(Buffer.from(await response.arrayBuffer()),await readFile(new URL('../private/story-images/window-6.webp',import.meta.url)));
+    const head=await fetch(`${base}/api/windows/6/image`,{method:'HEAD'});
+    assert.equal(head.status,200);
+    assert.equal((await head.arrayBuffer()).byteLength,0);
   });
 });
 

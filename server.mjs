@@ -12,7 +12,7 @@ const stories = [
   ['Вдвоём', 'Планы на ночь: спокойствие и любовь.', 'Остальное закажем.'],
   ['Один дома', 'Сегодня никого не ждём. Кроме новогоднего чуда.'],
   ['Все хотят разное', 'Главное новогоднее чудо — никто не спорил, что заказывать.'],
-  ['Новый год не 31-го', 'С друзьями любое число может быть 31 декабря.', 'Главное, что все добрались.', '2026-12-20', '20 декабря'],
+  ['Новый год не 31-го', 'С друзьями любое число может быть 31 декабря.', 'Главное, что все собрались.', '2026-12-20', '20 декабря'],
   ['Новый год на работе', 'Новый год и дедлайны вполне могут ужиться.', 'Особенно если любишь то, что делаешь.'],
   ['На расстоянии', 'Иногда между вами тысячи километров. А Новый год всё равно вместе.', 'Потому что близость расстояниями не измеряется.'],
   ['Кот ждёт', 'Желаем, чтобы дома всегда кто-то очень ждал.', 'Даже если повод — еда.'],
@@ -94,6 +94,21 @@ export function createLandingServer({now = () => new Date()} = {}) {
       if (!story) return json(res, 404, {error:'not_found'}, head);
       if (!available(story, moscowFormatter.format(now()))) return json(res, 423, {error:'locked',unlockDate:story[3],unlockLabel:story[4]}, head);
       return json(res, 200, {id,title:story[0],line1:story[1],line2:story[2] || '',letterLink:id===14}, head);
+    }
+    const imageMatch = /^\/api\/windows\/([1-6])\/image$/.exec(url.pathname);
+    if (imageMatch) {
+      const id = Number(imageMatch[1]), story = stories[id-1];
+      if (!available(story, moscowFormatter.format(now()))) return json(res, 423, {error:'locked',unlockDate:story[3],unlockLabel:story[4]}, head);
+      try {
+        const path = join(projectRoot, 'private', 'story-images', `window-${id}.webp`);
+        const info = await stat(path);
+        if (!info.isFile()) return json(res, 404, {error:'not_found'}, head);
+        res.writeHead(200, {'Content-Type':'image/webp', 'Content-Length':info.size, 'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff'});
+        if (head) return res.end();
+        const stream = createReadStream(path);
+        stream.on('error', () => res.destroy());
+        return stream.pipe(res);
+      } catch { return json(res, 404, {error:'not_found'}, head); }
     }
     if (url.pathname.startsWith('/api/')) return json(res, 404, {error:'not_found'}, head);
 

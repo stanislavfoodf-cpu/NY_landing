@@ -6,7 +6,7 @@ try{
   for(const width of [320,375,393,700,701,768,1440,1920]){
     const page=await browser.newPage({viewport:{width,height:900},reducedMotion:'reduce'});
     const requests=[];const errors=[];
-    page.on('request',r=>{if(/story-first-(2026\.png|desktop\.webp|video.*\.mp4)/.test(r.url()))requests.push(r.url())});
+    page.on('request',r=>{if(/\/api\/windows\/1\/image|story-first-(2026\.png|desktop\.webp|video.*\.mp4)/.test(r.url()))requests.push(r.url())});
     page.on('pageerror',e=>errors.push(e.message));
     await page.goto(baseUrl,{waitUntil:'networkidle'});
     assert.equal(requests.length,0,'story media is deferred');
@@ -15,7 +15,7 @@ try{
     const image=dialog.locator('img');await image.evaluate(el=>el.decode());
     assert.equal(await image.evaluate(el=>el.naturalWidth),1624);
     assert.equal(await dialog.locator('video').count(),0);
-    assert.ok(requests.some(url=>url.includes('story-first-desktop.webp')));
+    assert.ok(requests.some(url=>url.includes('/api/windows/1/image')));
     assert.ok(!requests.some(url=>url.includes('story-first-2026.png')));
     assert.ok(!requests.some(url=>url.includes('.mp4')));
     if(width<=700){await page.waitForTimeout(400);const box=await image.boundingBox(),clip=await dialog.locator('.first-story-image').boundingBox();assert.ok(Math.abs(clip.x)<1 && Math.abs(clip.width-width)<1 && box.x<0 && box.x+box.width>width,'mobile image is cropped past both screen edges');}

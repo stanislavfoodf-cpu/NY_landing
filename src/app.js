@@ -17,11 +17,12 @@ $('.close').onclick=close;overlay.addEventListener('click',e=>{if(e.target===ove
 const grid=$('#windows'), windowButtons=[];
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
 const storyVideos = {};
-function openFirstStory(story,button){
-  open(`<h2 id="dialog-title" class="sr-only">${escapeHtml(story.title)}</h2><div class="first-story-image"><img src="src/assets/figma/raw/story-first-desktop.webp" width="1624" height="1420" alt="Новогодняя встреча друзей. ${escapeHtml(story.line1)} ${escapeHtml(story.line2)}"></div>`,'story-dialog first-story-dialog first-story-static');
+function openImageStory(story,button){
+  open(`<h2 id="dialog-title" class="sr-only">${escapeHtml(story.title)}</h2><div class="first-story-image"><img src="/api/windows/${story.id}/image" width="1624" height="1635" alt="${escapeHtml(story.title)}. ${escapeHtml(story.line1)} ${escapeHtml(story.line2)}"></div>`,'story-dialog first-story-dialog first-story-static');
   const image=content.querySelector('img');
   const markReady=()=>{if(image.isConnected&&!overlay.hidden)pendingStory={button,index:story.id-1}};
   image.addEventListener('load',markReady,{once:true});
+  image.addEventListener('error',()=>{if(!image.isConnected||overlay.hidden)return;const message=document.createElement('p');message.setAttribute('role','alert');message.textContent='Не удалось загрузить историю. Попробуйте ещё раз.';image.replaceWith(message);},{once:true});
   if(image.complete&&image.naturalWidth)markReady();
 }
 function openVideoStory(story,button){
@@ -72,8 +73,8 @@ async function fetchWindowStates(){
           analytics('window',{number:state.id,locked:false});
           updateWindow(button,{id:state.id,title:story.title,available:true});
           button.removeAttribute('aria-busy');
-          if(story.id===1){
-            openFirstStory(story,button);
+          if(story.id>=1&&story.id<=6){
+            openImageStory(story,button);
           }else if(storyVideos[story.id]){
             openVideoStory(story,button);
           }else{
