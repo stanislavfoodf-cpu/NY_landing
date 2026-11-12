@@ -436,3 +436,9 @@ footer div{flex-wrap:wrap}
   .letter-to,.email-field span,.letter-dialog .email-field input{font-size:clamp(20px,6vw,28px)}
   .letter-dialog label.email-field{gap:6px}
 }
+
+/* Compensate for the FUD font's lower visual baseline in both address fields. */
+.letter-dialog .letter-to,.letter-dialog label.email-field{padding-block:6px 14px}
+@media(max-width:700px){
+  .letter-dialog .letter-to,.letter-dialog label.email-field{padding-block:3px 9px}
+}
