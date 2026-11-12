@@ -400,6 +400,11 @@ footer div{flex-wrap:wrap}
 .quiz-result .modal-garland__left{left:0}
 .quiz-result .modal-garland__right{right:0;transform:scaleX(-1)}
 
+/* Position the goat by the gift in the background, using the same scale as the house. */
+.goat-character{left:41.94%;top:106.2vw;width:9.6vw;height:auto;aspect-ratio:306 / 544}
+@media(max-width:700px){.goat-character{left:42.2%;top:269.3vw;width:20.8vw}}
+@media(min-width:1100px){.goat-character{left:38.64%;top:79.35vw;width:6vw}}
+
 /* Overlap the side slices with the rounded ends and fade their cut edges. */
 .modal-garland__top,.modal-garland__bottom{z-index:1}
 .modal-garland__left,.modal-garland__right{-webkit-mask-image:linear-gradient(to bottom,transparent,#000 20px,#000 calc(100% - 30px),transparent);mask-image:linear-gradient(to bottom,transparent,#000 20px,#000 calc(100% - 30px),transparent)}

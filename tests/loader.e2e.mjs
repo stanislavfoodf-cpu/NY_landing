@@ -8,7 +8,7 @@ try {
     const page = await browser.newPage({viewport:{width,height:900}});
     let release;
     const waitForRelease = new Promise(resolve => { release = resolve; });
-    await page.route('**/house-animation.gif', async route => { await waitForRelease; await route.continue(); });
+    await page.route('**/roof-animated.ad60364aecdceba0.webp', async route => { await waitForRelease; await route.continue(); });
     const navigation = page.goto(baseUrl, {waitUntil:'commit'});
     await page.locator('.page-loader').waitFor({state:'visible'});
     assert.equal(await page.locator('main').isHidden(), true);
@@ -29,7 +29,7 @@ try {
   const reduced = await browser.newPage({reducedMotion:'reduce'});
   await reduced.goto(baseUrl, {waitUntil:'load'});
   await reduced.locator('.page-loader').waitFor({state:'hidden'});
-  assert.match(await reduced.locator('.goat-character img').evaluate(img => img.currentSrc), /goat-still\.png$/);
+  assert.match(await reduced.locator('.goat-character img').evaluate(img => img.currentSrc), /goat-static\.df4000bdf4831b26\.png$/);
   assert.equal(await reduced.evaluate(() => performance.getEntriesByType('resource').some(entry => entry.name.includes('main-07.png'))), false);
   await reduced.close();
   const noScript = await browser.newPage({javaScriptEnabled:false});
