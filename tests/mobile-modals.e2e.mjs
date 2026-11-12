@@ -29,6 +29,8 @@ try {
         const fieldStyles=await dialog.evaluate(el=>{const email=el.querySelector('input[type=email]'),to=el.querySelector('.letter-to'),letter=el.querySelector('textarea'),placeholder=getComputedStyle(email,'::placeholder');return{font:getComputedStyle(email).fontFamily,size:getComputedStyle(email).fontSize,toSize:getComputedStyle(to).fontSize,placeholderFont:placeholder.fontFamily,placeholderSize:placeholder.fontSize,lineHeight:parseFloat(getComputedStyle(letter).lineHeight)/parseFloat(getComputedStyle(letter).fontSize),scrollbar:getComputedStyle(el.querySelector('#dialog-content')).scrollbarColor,hint:el.querySelector('.letter-hint').textContent}});
         assert.match(fieldStyles.font,/FUD/);assert.match(fieldStyles.placeholderFont,/FUD/);
         assert.equal(fieldStyles.size,fieldStyles.toSize);assert.equal(fieldStyles.placeholderSize,fieldStyles.toSize);
+        const alignment=await page.locator('.email-field').evaluate(label=>{const a=label.querySelector('span').getBoundingClientRect(),b=label.querySelector('input').getBoundingClientRect();return Math.abs((a.top+a.bottom-b.top-b.bottom)/2)});
+        assert.ok(alignment<1,`${width} email and label are vertically aligned`);
         const placeholderFits=await page.getByLabel('Ваш email').evaluate(input=>{const style=getComputedStyle(input),canvas=document.createElement('canvas'),context=canvas.getContext('2d');context.font=`${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;return context.measureText(input.placeholder).width<=input.clientWidth+1});
         assert.equal(placeholderFits,true,`${width} email placeholder fits`);
         assert.ok(Math.abs(fieldStyles.lineHeight-1.2)<.01);
