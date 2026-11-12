@@ -26,9 +26,18 @@ try {
       }else{assert.ok(Math.abs(geometry.w-geometry.h)<1,`${width} ${type} desktop remains square`);assert.equal(geometry.frameVisible,false);}
       if(type==='letter'){
         assert.deepEqual(await page.locator('.consent').evaluate(el=>[getComputedStyle(el).marginTop,getComputedStyle(el).marginBottom]),['15px','15px']);
+        const fieldStyles=await dialog.evaluate(el=>{const email=el.querySelector('input[type=email]'),to=el.querySelector('.letter-to'),letter=el.querySelector('textarea'),placeholder=getComputedStyle(email,'::placeholder');return{font:getComputedStyle(email).fontFamily,size:getComputedStyle(email).fontSize,toSize:getComputedStyle(to).fontSize,placeholderFont:placeholder.fontFamily,placeholderSize:placeholder.fontSize,lineHeight:parseFloat(getComputedStyle(letter).lineHeight)/parseFloat(getComputedStyle(letter).fontSize),scrollbar:getComputedStyle(el.querySelector('#dialog-content')).scrollbarColor,hint:el.querySelector('.letter-hint').textContent}});
+        assert.match(fieldStyles.font,/FUD/);assert.match(fieldStyles.placeholderFont,/FUD/);
+        assert.equal(fieldStyles.size,fieldStyles.toSize);assert.equal(fieldStyles.placeholderSize,fieldStyles.toSize);
+        const placeholderFits=await page.getByLabel('Ваш email').evaluate(input=>{const style=getComputedStyle(input),canvas=document.createElement('canvas'),context=canvas.getContext('2d');context.font=`${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;return context.measureText(input.placeholder).width<=input.clientWidth+1});
+        assert.equal(placeholderFits,true,`${width} email placeholder fits`);
+        assert.ok(Math.abs(fieldStyles.lineHeight-1.2)<.01);
+        assert.match(fieldStyles.scrollbar,/rgba\(0, 0, 0, 0\)|transparent/);
+        assert.equal(fieldStyles.hint,'Не забудьте проверить адрес почты почты перед отправкой');
         await page.getByLabel('Ваш email').fill('test@example.com');
         await page.getByLabel('Ваше письмо').fill('Тестовое письмо');
         await page.getByRole('checkbox',{name:'Выражаю согласие на обработку'}).check();
+        assert.equal(await page.getByRole('checkbox',{name:'Выражаю согласие на обработку'}).evaluate(el=>getComputedStyle(el).outlineStyle),'none');
         await dialog.getByRole('button',{name:'Отправить',exact:true}).click();
         assert.match(await page.locator('#letter-status').textContent(),/недоступна/);
       }else{

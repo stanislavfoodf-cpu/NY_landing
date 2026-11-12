@@ -9,7 +9,8 @@ body{--house-source:url('assets/figma/raw/house-v6-3072.3d5b8afd8e1c.webp');marg
 body.modal-open{overflow:hidden}
 button,a,input,textarea{font:inherit}
 button{cursor:pointer}
-button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #ffe786;outline-offset:4px}
+button:focus,a:focus,input:focus,textarea:focus{outline:none}
+button:focus-visible,a:focus-visible{background-color:#ffffff26;filter:brightness(1.25);text-decoration:underline;text-underline-offset:3px}
 h1,h2{font-family:FUD,sans-serif;font-weight:500;line-height:1.05;margin:0}
 h1{text-transform:uppercase;font-size:clamp(34px,3.2vw,62px)}
 h2{font-size:clamp(28px,2vw,40px)}
@@ -152,10 +153,10 @@ footer div{flex-wrap:wrap}
 .letter-to,.letter-dialog .email-field{display:flex;align-items:center;width:100%;min-height:76px;border:1px solid white;border-radius:60px;background:#ffffff55;padding:10px 25px;margin:0 0 20px;text-align:left}
 .letter-to,.email-field span{font:500 clamp(28px,5vw,54px)/1 FUD;white-space:nowrap}
 .letter-dialog label.email-field{display:flex;gap:20px}
-.letter-dialog .email-field input{margin:0;padding:0;border:0;background:transparent;color:white;font-size:clamp(18px,3vw,30px);min-width:0}
-.letter-dialog .email-field input::placeholder{color:#dce1f2}
+.letter-dialog .email-field input{margin:0;padding:0;border:0;background:transparent;color:white;font:500 clamp(28px,5vw,54px)/1 FUD;min-width:0}
+.letter-dialog .email-field input::placeholder{font:inherit;color:#dce1f2}
 .letter-dialog .letter-field{display:block;margin:35px 0 0!important}
-.letter-dialog .letter-field textarea{height:clamp(300px,55vh,645px);resize:vertical;border:0;border-radius:32px;padding:32px;color:#6270b2;font-size:clamp(18px,3vw,28px);line-height:1.5}
+.letter-dialog .letter-field textarea{height:clamp(300px,55vh,645px);resize:vertical;border:0;border-radius:32px;padding:32px;color:#6270b2;font-size:clamp(18px,3vw,28px);line-height:1.2}
 .letter-dialog .letter-field textarea::placeholder{color:#d5dbed}
 .letter-dialog .letter-hint{color:#c6cde2;font-size:clamp(18px,3vw,26px);margin:30px auto 20px}
 .letter-dialog .consent{text-align:left;margin:20px 0;color:white}
@@ -413,3 +414,23 @@ footer div{flex-wrap:wrap}
 }
 .quiz-result .modal-garland__left,.quiz-result .modal-garland__right{top:calc(23.188cqw - 14px);bottom:calc(23.188cqw - 28px)}
 .letter-dialog .consent{margin-block:15px}
+
+/* Keep modal scrollbars unobtrusive without hiding the scroll position. */
+.overlay,.overlay *{scrollbar-width:thin;scrollbar-color:#ffffff73 transparent}
+.overlay::-webkit-scrollbar,.overlay *::-webkit-scrollbar{width:6px;height:6px}
+.overlay::-webkit-scrollbar-track,.overlay *::-webkit-scrollbar-track{background:transparent}
+.overlay::-webkit-scrollbar-thumb,.overlay *::-webkit-scrollbar-thumb{background:#ffffff73;border:0;border-radius:6px}
+.overlay::-webkit-scrollbar-corner,.overlay *::-webkit-scrollbar-corner{background:transparent}
+
+/* Indicate keyboard focus inside dialogs without adding an outer border. */
+.dialog:focus,.dialog :is(button,a,input,textarea):focus{outline:none}
+.dialog :is(button,a):focus-visible{filter:brightness(1.25);text-decoration:underline;text-underline-offset:3px}
+.dialog input[type=radio]:focus-visible{background-color:#ffffff55}
+.dialog input[type=checkbox]:focus-visible{background-color:#ffffff55}
+.letter-dialog .email-field:has(input:focus-visible) span{text-decoration:underline;text-underline-offset:4px}
+.letter-dialog textarea:focus-visible{background:#fff}
+@media(min-width:701px){.letter-dialog .letter-hint{font-size:clamp(18px,1.55vw,22px)}}
+@media(max-width:390px){
+  .letter-to,.email-field span,.letter-dialog .email-field input{font-size:clamp(20px,6vw,28px)}
+  .letter-dialog label.email-field{gap:6px}
+}
