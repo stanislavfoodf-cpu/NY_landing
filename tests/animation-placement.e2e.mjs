@@ -15,7 +15,7 @@ try {
     const tolerance=Math.max(2,geometry.houseWidth*.003);
     assert.ok(Math.abs(geometry.seatX-geometry.giftX)<tolerance,`${width}: goat horizontal seat ${JSON.stringify(geometry)}`);
     assert.ok(Math.abs(geometry.seatY-geometry.giftY)<tolerance,`${width}: goat vertical seat ${JSON.stringify(geometry)}`);
-    assert.ok(Math.abs(geometry.tipX-geometry.headX)<2 && Math.abs(geometry.tipY-geometry.headY)<2,`${width}: arrow points to goat's head ${JSON.stringify(geometry)}`);
+    assert.ok(Math.abs(geometry.tipX-geometry.headX+10)<2 && Math.abs(geometry.tipY-geometry.headY)<2,`${width}: arrow is 10px left of goat's head ${JSON.stringify(geometry)}`);
     assert.match(geometry.goat,/goat-animated\.7a949995fed6140b\.webp/);
     assert.match(geometry.roof,/roof-animated\.ad60364aecdceba0\.webp/);
     assert.equal(geometry.goatLoaded,306);assert.equal(geometry.roofLoaded,1112);

@@ -404,7 +404,7 @@ footer div{flex-wrap:wrap}
 /* Position the goat by the gift in the background, using the same scale as the house. */
 .house{--goat-left:41.94%;--goat-top:106.2vw;--goat-width:9.6vw}
 .goat-character{left:var(--goat-left);top:var(--goat-top);width:var(--goat-width);height:auto;aspect-ratio:306 / 544}
-.house-arrow-goat{left:calc(var(--goat-left) - var(--goat-width) * .316);top:calc(var(--goat-top) - var(--goat-width) * .332);width:calc(var(--goat-width) * .65)}
+.house-arrow-goat{left:calc(var(--goat-left) - var(--goat-width) * .316 - 10px);top:calc(var(--goat-top) - var(--goat-width) * .332);width:calc(var(--goat-width) * .65)}
 @media(max-width:700px){.house{--goat-left:42.2%;--goat-top:269.3vw;--goat-width:20.8vw}}
 @media(min-width:1100px){.house{--goat-left:38.64%;--goat-top:79.35vw;--goat-width:6vw}}
 
