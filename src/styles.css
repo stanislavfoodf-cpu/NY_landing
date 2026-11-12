@@ -442,3 +442,11 @@ footer div{flex-wrap:wrap}
 @media(max-width:700px){
   .letter-dialog .letter-to,.letter-dialog label.email-field{padding-block:3px 9px}
 }
+
+.footer-brand{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:20px;width:min(100%,1000px);margin:30px auto 0}
+.footer-brand .footer-logo{grid-column:2;margin:0}
+footer .footer-menu{grid-column:3;justify-self:end;border:2px solid white;border-radius:40px;padding:10px 28px;background:transparent;font-weight:700;white-space:nowrap}
+@media(max-width:850px){
+  .footer-brand{display:flex;flex-direction:column;gap:20px}
+  footer .footer-menu{align-self:center}
+}
