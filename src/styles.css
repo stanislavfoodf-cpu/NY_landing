@@ -26,7 +26,7 @@ p{line-height:1.2}
 .window.viewed::after{content:'';position:absolute;inset:0;background:url('assets/figma/raw/open-window-v5-1000.da7c53b5f7b9.webp') center / 100% 100% no-repeat;pointer-events:none}
 .window.locked{background:#111b4366}
 .window.locked span{font-size:0;text-shadow:0 1px 4px #000;display:block}
-.window.locked span:before{content:'';display:block;width:42px;height:42px;margin:0 auto 3px;background:url('assets/figma/raw/lock.png') center/contain no-repeat}
+.window.locked span:before{content:'';display:block;width:42px;height:42px;margin:0 auto 3px;background:url('assets/figma/raw/lock.png') center / 28px 28px no-repeat}
 .window:nth-child(11){grid-area:3 / 4}
 .window:nth-child(12){grid-area:3 / 3}
 .window:nth-child(13){grid-area:4 / 3}
