@@ -458,5 +458,6 @@ footer .footer-menu::before{content:'';position:absolute;pointer-events:none;wid
 .scroll-to-cards.is-used img{animation:none}
 body.modal-open .scroll-to-cards{visibility:hidden}
 @keyframes scroll-arrow-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(9px)}}
+@media(min-width:1100px){.scroll-to-cards{left:calc(max(16px, 50% - 19vw - 57px) - 35px)}}
 @media(max-width:700px){.scroll-to-cards{left:calc(50% - 28.5px);bottom:max(20px,env(safe-area-inset-bottom))}}
 @media(prefers-reduced-motion:reduce){.scroll-to-cards img{animation:none}}
