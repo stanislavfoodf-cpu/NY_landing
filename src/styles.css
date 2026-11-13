@@ -460,3 +460,12 @@ body.modal-open .scroll-to-cards{visibility:hidden}
 @media(min-width:1100px){.scroll-to-cards{left:calc(max(16px, 50% - 19vw - 57px) - 35px)}}
 @media(max-width:700px){.scroll-to-cards{left:calc(50% - 28.5px);bottom:max(20px,env(safe-area-inset-bottom))}}
 @media(prefers-reduced-motion:reduce){.scroll-to-cards img{animation:none}}
+
+/* Финальный блок заказа */
+.footer-promo{width:min(750px,100%);margin:30px auto 0;padding:32px 38px;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:28px;text-align:left;border:1px solid #b7d3ff;border-radius:30px;background:linear-gradient(145deg,#647bb8,#4c609b);box-shadow:0 0 22px #b5d6ffbb}
+footer .footer-promo>div{display:block;margin:0}
+.footer-promo h2{font-size:clamp(30px,2.2vw,40px);line-height:1.05}
+.footer-promo p{font-size:22px;line-height:1.3;margin:12px 0 0}
+.footer-promo__action img{display:block;width:min(100%,270px);height:auto;margin:0 auto 20px}
+footer .footer-promo__action a{padding:16px 20px;border:1px solid #b7d3ff;border-radius:45px;background:#5267a4;box-shadow:0 0 20px #b5d6ffcc;color:#fff;font-size:23px;font-weight:600}
+@media(max-width:600px){.footer-promo{grid-template-columns:1fr;gap:24px;text-align:center;padding:28px 22px}.footer-promo h2{font-size:32px}.footer-promo p{font-size:19px}.footer-promo__action img{width:min(100%,240px)}footer .footer-promo__action a{font-size:19px;padding:14px 16px}}
