@@ -9,7 +9,11 @@ const results=[['Тихий Новый год','Ваш главный новог
 if(typeof document!=='undefined'){
 const $=s=>document.querySelector(s), overlay=$('#overlay'), dialog=$('.dialog'), content=$('#dialog-content'),scrollToCards=$('.scroll-to-cards');let previous,answers=[],pendingStory=null;
 const analytics=(type,detail={})=>document.dispatchEvent(new CustomEvent('sk-ny:analytics',{detail:{type,...detail}}));
-function markStoryViewed(){if(!pendingStory)return;const {button,index}=pendingStory;button.classList.add('viewed');if(!button.getAttribute('aria-label').includes('просмотрено'))button.setAttribute('aria-label',button.getAttribute('aria-label')+', просмотрено');try{sessionStorage.setItem('window-v5-'+index,'1')}catch{}pendingStory=null;scrollToCards.hidden=false;}
+function markStoryViewed(){if(!pendingStory)return;const {button,index}=pendingStory;button.classList.add('viewed');if(!button.getAttribute('aria-label').includes('просмотрено'))button.setAttribute('aria-label',button.getAttribute('aria-label')+', просмотрено');try{sessionStorage.setItem('window-v5-'+index,'1')}catch{}pendingStory=null;scrollToCards.hidden=false;updateScrollArrowVisibility();}
+const updateScrollArrowVisibility=()=>{scrollToCards.classList.toggle('past-house',$('.cards').getBoundingClientRect().top<=window.innerHeight+30)};
+let scrollArrowUpdatePending=false;
+function scheduleScrollArrowUpdate(){if(scrollArrowUpdatePending)return;scrollArrowUpdatePending=true;requestAnimationFrame(()=>{scrollArrowUpdatePending=false;updateScrollArrowVisibility()})}
+window.addEventListener('scroll',scheduleScrollArrowUpdate,{passive:true});window.addEventListener('resize',scheduleScrollArrowUpdate,{passive:true});updateScrollArrowVisibility();
 try{if(sessionStorage.getItem('scroll-to-cards-clicked'))scrollToCards.classList.add('is-used');}catch{}
 scrollToCards.addEventListener('click',()=>{scrollToCards.classList.add('is-used');try{sessionStorage.setItem('scroll-to-cards-clicked','1')}catch{}$('.cards').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});});
 function releaseStoryVideo(){const video=content.querySelector('video.story-video');if(video){video.pause();video.removeAttribute('src');video.load();}}
