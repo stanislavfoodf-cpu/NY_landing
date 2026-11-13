@@ -27,7 +27,8 @@ const projectRoot = dirname(fileURLToPath(import.meta.url));
 const exposedFiles = new Set(['index.html', 'robots.txt', 'src/app.js', 'src/loader.js', 'src/styles.css']);
 const mime = { '.html':'text/html; charset=utf-8', '.txt':'text/plain; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.svg':'image/svg+xml', '.png':'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.gif':'image/gif', '.webp':'image/webp', '.mp4':'video/mp4', '.ttf':'font/ttf', '.woff':'font/woff', '.woff2':'font/woff2' };
 const moscowFormatter = new Intl.DateTimeFormat('en-CA', {timeZone:'Europe/Moscow', year:'numeric', month:'2-digit', day:'2-digit'});
-const available = (story, date) => !story[3] || date >= story[3];
+const undatedLockedWindows = new Set([7, 8, 9, 10, 11]);
+const available = (story, date) => !undatedLockedWindows.has(stories.indexOf(story) + 1) && (!story[3] || date >= story[3]);
 const compressible = new Set(['.html', '.js', '.css', '.svg']);
 const immutableAsset = (path) => /[.-][a-f0-9]{8,64}\.[^.]+$/i.test(basename(path));
 
@@ -92,13 +93,13 @@ export function createLandingServer({now = () => new Date()} = {}) {
       const id = Number(storyMatch[1]);
       const story = Number.isSafeInteger(id) ? stories[id-1] : undefined;
       if (!story) return json(res, 404, {error:'not_found'}, head);
-      if (!available(story, moscowFormatter.format(now()))) return json(res, 423, {error:'locked',unlockDate:story[3],unlockLabel:story[4]}, head);
+      if (!available(story, moscowFormatter.format(now()))) return json(res, 423, {error:'locked',unlockDate:story[3] || null,unlockLabel:story[4] || null}, head);
       return json(res, 200, {id,title:story[0],line1:story[1],line2:story[2] || '',letterLink:id===14}, head);
     }
     const imageMatch = /^\/api\/windows\/([1-6])\/image$/.exec(url.pathname);
     if (imageMatch) {
       const id = Number(imageMatch[1]), story = stories[id-1];
-      if (!available(story, moscowFormatter.format(now()))) return json(res, 423, {error:'locked',unlockDate:story[3],unlockLabel:story[4]}, head);
+      if (!available(story, moscowFormatter.format(now()))) return json(res, 423, {error:'locked',unlockDate:story[3] || null,unlockLabel:story[4] || null}, head);
       try {
         const path = join(projectRoot, 'private', 'story-images', `window-${id}.webp`);
         const info = await stat(path);
