@@ -185,3 +185,20 @@ test('MP4 responses support byte ranges needed for video playback and seeking', 
     });
   } finally { await rm(folder,{recursive:true,force:true}); }
 });
+
+test('windows without a release date remain locked', async () => {
+  const clock={current:'2026-11-13T12:00:00Z'};
+  await withServer(clock, async base => {
+    for (const time of ['2026-11-13T12:00:00Z','2028-01-02T12:00:00Z']) {
+      clock.current=time;
+      const {windows}=await (await fetch(base+'/api/windows')).json();
+      for (const id of [7,8,9,10,11]) {
+        assert.equal(windows[id-1].available,false);
+        assert.equal(windows[id-1].unlockLabel,null);
+        const response=await fetch(base+`/api/windows/${id}/story`);
+        assert.equal(response.status,423);
+        assert.deepEqual(await response.json(),{error:'locked',unlockDate:null,unlockLabel:null});
+      }
+    }
+  });
+});

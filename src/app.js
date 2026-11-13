@@ -55,8 +55,8 @@ function updateWindow(button,state){
   const locked=!state.available;
   button.classList.toggle('locked',locked);
   if(locked)button.classList.remove('viewed');
-  button.setAttribute('aria-label',`Окно ${state.id}: ${state.title||'История'}${locked?', откроется '+state.unlockLabel:''}`);
-  button.innerHTML=locked?`<span>♙<small>открывается<br><b>${escapeHtml(state.unlockLabel)}</b></small></span>`:'';
+  button.setAttribute('aria-label',`Окно ${state.id}: ${state.title||'История'}${locked?(state.unlockLabel?', откроется '+state.unlockLabel:', закрыто'):''}`);
+  button.innerHTML=locked?`<span>♙${state.unlockLabel?`<small>открывается<br><b>${escapeHtml(state.unlockLabel)}</b></small>`:''}</span>`:'';
   if(!locked){try{if(sessionStorage.getItem('window-v5-'+(state.id-1))){button.classList.add('viewed');button.setAttribute('aria-label',button.getAttribute('aria-label')+', просмотрено');scrollToCards.hidden=false}}catch{}}
 }
 async function fetchWindowStates(){
@@ -74,7 +74,7 @@ async function fetchWindowStates(){
         try{
           const result=await fetch(`/api/windows/${state.id}/story`,{cache:'no-store'});
           const story=await result.json();
-          if(result.status===423){analytics('window',{number:state.id,locked:true});updateWindow(button,{id:state.id,title:null,available:false,unlockLabel:story.unlockLabel});button.removeAttribute('aria-busy');open(`<h2 id="dialog-title" class="locked-title">Здесь пока тихо</h2><p>Загляните ${escapeHtml(story.unlockLabel)}.</p>`,'locked-dialog');return}
+          if(result.status===423){analytics('window',{number:state.id,locked:true});updateWindow(button,{id:state.id,title:null,available:false,unlockLabel:story.unlockLabel});button.removeAttribute('aria-busy');open(`<h2 id="dialog-title" class="locked-title">Здесь пока тихо</h2>${story.unlockLabel?`<p>Загляните ${escapeHtml(story.unlockLabel)}.</p>`:''}`,'locked-dialog');return}
           if(!result.ok)throw new Error('История недоступна');
           analytics('window',{number:state.id,locked:false});
           updateWindow(button,{id:state.id,title:story.title,available:true});
