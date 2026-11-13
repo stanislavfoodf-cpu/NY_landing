@@ -469,3 +469,6 @@ footer .footer-promo>div{display:block;margin:0}
 .footer-promo__action img{display:block;width:min(100%,270px);height:auto;margin:0 auto 20px}
 footer .footer-promo__action a{padding:16px 20px;border:1px solid #b7d3ff;border-radius:45px;background:#5267a4;box-shadow:0 0 20px #b5d6ffcc;color:#fff;font-size:23px;font-weight:600}
 @media(max-width:600px){.footer-promo{grid-template-columns:1fr;gap:24px;text-align:center;padding:28px 22px}.footer-promo h2{font-size:32px}.footer-promo p{font-size:19px}.footer-promo__action img{width:min(100%,240px)}footer .footer-promo__action a{font-size:19px;padding:14px 16px}}
+
+.goat .goat-promo{display:inline;margin:0;font-weight:700;text-decoration:underline}
+.goat .goat-terms{display:block;margin-top:.9em;font-size:.65em;line-height:1.3}
