@@ -79,7 +79,7 @@ async function fetchWindowStates(){
           analytics('window',{number:state.id,locked:false});
           updateWindow(button,{id:state.id,title:story.title,available:true});
           button.removeAttribute('aria-busy');
-          if(story.id>=1&&story.id<=6){
+          if(story.id>=1&&story.id<=14){
             openImageStory(story,button);
           }else if(storyVideos[story.id]){
             openVideoStory(story,button);

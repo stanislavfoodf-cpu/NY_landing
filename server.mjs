@@ -99,7 +99,7 @@ export function createLandingServer({now = () => new Date()} = {}) {
       if (!available(story, moscowFormatter.format(now()))) return json(res, 423, {error:'locked',unlockDate:story[3] || null,unlockLabel:story[4] || null}, head);
       return json(res, 200, {id,title:story[0],line1:story[1],line2:story[2] || '',letterLink:id===14}, head);
     }
-    const imageMatch = /^\/api\/windows\/([1-6])\/image$/.exec(url.pathname);
+    const imageMatch = /^\/api\/windows\/(1[0-4]|[1-9])\/image$/.exec(url.pathname);
     if (imageMatch) {
       const id = Number(imageMatch[1]), story = stories[id-1];
       if (!available(story, moscowFormatter.format(now()))) return json(res, 423, {error:'locked',unlockDate:story[3] || null,unlockLabel:story[4] || null}, head);
