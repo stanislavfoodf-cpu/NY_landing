@@ -52,11 +52,23 @@ test('story images match their window and follow the server unlock date', async 
     }
     assert.equal((await fetch(`${base}/api/windows/6/image`)).status,423);
     assert.equal((await fetch(`${base}/private/story-images/window-6.webp`)).status,404);
-    assert.equal((await fetch(`${base}/api/windows/7/image`)).status,404);
+    assert.equal((await fetch(`${base}/api/windows/7/image`)).status,423);
+    assert.equal((await fetch(`${base}/api/windows/15/image`)).status,404);
     clock.current='2026-12-06T21:00:00Z';
     const response=await fetch(`${base}/api/windows/6/image`);
     assert.equal(response.status,200);
     assert.deepEqual(Buffer.from(await response.arrayBuffer()),await readFile(new URL('../private/story-images/window-6.webp',import.meta.url)));
+    const states=await (await fetch(`${base}/api/windows`)).json();
+    for (const {id,unlockDate} of states.windows.slice(6)) {
+      const release=new Date(`${unlockDate}T00:00:00+03:00`).getTime();
+      clock.current=new Date(release-1).toISOString();
+      assert.equal((await fetch(`${base}/api/windows/${id}/image`)).status,423);
+      clock.current=new Date(release).toISOString();
+      const image=await fetch(`${base}/api/windows/${id}/image`);
+      assert.equal(image.status,200);
+      assert.equal(image.headers.get('content-type'),'image/webp');
+      assert.deepEqual(Buffer.from(await image.arrayBuffer()),await readFile(new URL(`../private/story-images/window-${id}.webp`,import.meta.url)));
+    }
     const head=await fetch(`${base}/api/windows/6/image`,{method:'HEAD'});
     assert.equal(head.status,200);
     assert.equal((await head.arrayBuffer()).byteLength,0);

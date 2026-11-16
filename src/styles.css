@@ -486,3 +486,5 @@ footer .footer-promo__action a{padding:16px 20px;border:2px solid white;border-r
 .letter-dialog button[type=submit].is-loading::after{content:'';display:inline-block;width:.7em;height:.7em;margin-left:.5em;border:2px solid #ffffff66;border-top-color:#fff;border-radius:50%;vertical-align:middle;animation:letter-spinner .8s linear infinite}
 @keyframes letter-spinner{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.letter-dialog button[type=submit].is-loading::after{animation:none}}
+
+.story-letter-link{text-align:center;padding:0 16px 20px}

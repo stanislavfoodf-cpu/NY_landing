@@ -24,7 +24,7 @@ const grid=$('#windows'), windowButtons=[];
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
 const storyVideos = {};
 function openImageStory(story,button){
-  open(`<h2 id="dialog-title" class="sr-only">${escapeHtml(story.title)}</h2><div class="first-story-image"><img src="/api/windows/${story.id}/image" width="1624" height="1635" alt="${escapeHtml(story.title)}. ${escapeHtml(story.line1)} ${escapeHtml(story.line2)}"></div>`,'story-dialog first-story-dialog first-story-static');
+  open(`<h2 id="dialog-title" class="sr-only">${escapeHtml(story.title)}</h2><div class="first-story-image"><img src="/api/windows/${story.id}/image" width="1624" height="1635" alt="${escapeHtml(story.title)}. ${escapeHtml(story.line1)} ${escapeHtml(story.line2)}"></div>${story.letterLink?'<div class="story-letter-link"><button class="letter-open">Написать себе в будущее</button></div>':''}`,'story-dialog first-story-dialog first-story-static');
   const image=content.querySelector('img');
   const markReady=()=>{if(image.isConnected&&!overlay.hidden)pendingStory={button,index:story.id-1}};
   image.addEventListener('load',markReady,{once:true});
@@ -79,7 +79,7 @@ async function fetchWindowStates(){
           analytics('window',{number:state.id,locked:false});
           updateWindow(button,{id:state.id,title:story.title,available:true});
           button.removeAttribute('aria-busy');
-          if(story.id>=1&&story.id<=6){
+          if(story.id>=1&&story.id<=14){
             openImageStory(story,button);
           }else if(storyVideos[story.id]){
             openVideoStory(story,button);
