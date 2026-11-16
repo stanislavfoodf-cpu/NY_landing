@@ -1,4 +1,5 @@
 import { createServer } from 'node:http';
+import { randomUUID } from 'node:crypto';
 import { createReadStream } from 'node:fs';
 import { realpath, stat } from 'node:fs/promises';
 import { basename, dirname, extname, join, relative, sep } from 'node:path';
@@ -71,9 +72,45 @@ function json(res, status, body, head = false) {
   res.end(head ? undefined : JSON.stringify(body));
 }
 
-export function createLandingServer({now = () => new Date()} = {}) {
+export function createLandingServer({now = () => new Date(), mindboxFetch = globalThis.fetch, mindboxSecret = process.env.MINDBOX_SECRET_KEY} = {}) {
   return createServer(async (req, res) => {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    if (req.method === 'POST' && req.url === '/api/letters') {
+      if (!mindboxSecret) return json(res, 503, {error:'service_unavailable'});
+      if (req.headers['sec-fetch-site'] === 'cross-site') return json(res, 403, {error:'forbidden'});
+      if (req.headers.origin) { try { if (new URL(req.headers.origin).host !== req.headers.host) return json(res, 403, {error:'forbidden'}); } catch { return json(res, 403, {error:'forbidden'}); } }
+      if (!/^application\/json(?:\s*;|$)/i.test(req.headers['content-type'] || '')) return json(res, 415, {error:'invalid_content_type'});
+      const chunks = []; let bytes = 0;
+      try {
+        for await (const chunk of req) {
+          bytes += chunk.length;
+          if (bytes > 4096) return json(res, 413, {error:'payload_too_large'});
+          chunks.push(chunk);
+        }
+        let data; try { data = JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { return json(res, 400, {error:'invalid_json'}); }
+        if (!data || typeof data !== 'object' || Array.isArray(data)) return json(res, 400, {error:'invalid_input'});
+        const email = typeof data.email === 'string' ? data.email.trim() : '';
+        const letter = typeof data.letter === 'string' ? data.letter.trim() : '';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254 || !letter || letter.length > 250 || data.consent !== true) return json(res, 400, {error:'invalid_input'});
+        const id = randomUUID();
+        const operations = [
+          ['NY.CreateLetter', {product:{description:letter,ids:{nYLetter:id}}}],
+          ['NYLetter.Set', {customer:{email},addProductToList:{product:{ids:{nYLetter:id}}}}],
+        ];
+        for (const [operation, body] of operations) {
+          const url = new URL('https://api.mindbox.ru/v3/operations/sync');
+          url.searchParams.set('endpointId', 'secretkitchen-website');
+          url.searchParams.set('operation', operation);
+          const response = await mindboxFetch(url, {method:'POST', headers:{'Content-Type':'application/json; charset=utf-8', 'Accept':'application/json', 'Authorization':`SecretKey ${mindboxSecret}`}, body:JSON.stringify(body), signal:AbortSignal.timeout(10000)});
+          if (!response.ok) return json(res, 502, {error:'submission_failed'});
+          const result = await response.json();
+          if (result.status !== 'Success') return json(res, 502, {error:'submission_failed'});
+        }
+        return json(res, 200, {success:true});
+      } catch (error) {
+        return json(res, 502, {error:'submission_failed'});
+      }
+    }
     const head = req.method === 'HEAD';
     if (req.method !== 'GET' && !head) {
       res.writeHead(405, {'Allow':'GET, HEAD', 'Cache-Control':'no-store'});

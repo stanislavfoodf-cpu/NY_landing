@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test tests/domain.test.mjs tests/server.test.mjs",
+    "test": "node --test tests/domain.test.mjs tests/server.test.mjs tests/mindbox.test.mjs",
     "build": "node tests/build.mjs",
     "start": "node server.mjs",
     "test:e2e": "node tests/e2e.mjs"
