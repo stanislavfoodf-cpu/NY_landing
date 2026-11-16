@@ -16,18 +16,18 @@ async function withServer(clock, run) {
 }
 
 test('stories unlock at Moscow midnight and unavailable content is never returned', async () => {
-  const clock={current:'2026-12-19T20:59:59Z'};
+  const clock={current:'2026-12-06T20:59:59Z'};
   await withServer(clock, async base => {
     let res=await fetch(`${base}/api/windows`);
     assert.equal(res.headers.get('cache-control'),'no-store');
     let {windows}=await res.json();
     assert.equal(windows.length,14);
-    assert.deepEqual(windows[5],{id:6,title:null,unlockDate:'2026-12-20',unlockLabel:'20 декабря',available:false});
+    assert.deepEqual(windows[5],{id:6,title:null,unlockDate:'2026-12-07',unlockLabel:'7 декабря',available:false});
     res=await fetch(`${base}/api/windows/6/story?date=2028-01-01`, {headers:{'X-Date':'2028-01-01'}});
     assert.equal(res.status,423);
-    assert.deepEqual(await res.json(),{error:'locked',unlockDate:'2026-12-20',unlockLabel:'20 декабря'});
+    assert.deepEqual(await res.json(),{error:'locked',unlockDate:'2026-12-07',unlockLabel:'7 декабря'});
     assert.equal((await fetch(`${base}/api/windows/1/story`)).status,200);
-    clock.current='2026-12-19T21:00:00Z';
+    clock.current='2026-12-06T21:00:00Z';
     res=await fetch(`${base}/api/windows/6/story`);
     assert.equal(res.status,200);
     assert.equal((await res.json()).title,'Новый год не 31-го');
@@ -41,7 +41,7 @@ test('stories unlock at Moscow midnight and unavailable content is never returne
 });
 
 test('story images match their window and follow the server unlock date', async () => {
-  const clock={current:'2026-12-19T20:59:59Z'};
+  const clock={current:'2026-12-06T20:59:59Z'};
   await withServer(clock, async base => {
     for (let id=1;id<=5;id++) {
       const response=await fetch(`${base}/api/windows/${id}/image`);
@@ -53,7 +53,7 @@ test('story images match their window and follow the server unlock date', async 
     assert.equal((await fetch(`${base}/api/windows/6/image`)).status,423);
     assert.equal((await fetch(`${base}/private/story-images/window-6.webp`)).status,404);
     assert.equal((await fetch(`${base}/api/windows/7/image`)).status,404);
-    clock.current='2026-12-19T21:00:00Z';
+    clock.current='2026-12-06T21:00:00Z';
     const response=await fetch(`${base}/api/windows/6/image`);
     assert.equal(response.status,200);
     assert.deepEqual(Buffer.from(await response.arrayBuffer()),await readFile(new URL('../private/story-images/window-6.webp',import.meta.url)));
@@ -186,12 +186,10 @@ test('MP4 responses support byte ranges needed for video playback and seeking', 
   } finally { await rm(folder,{recursive:true,force:true}); }
 });
 
-test('five additional windows unlock on their specified Moscow dates', async () => {
+test('locked windows follow visual order and Moscow midnight', async () => {
  const clock={current:'2026-11-16T00:00:00Z'};
  await withServer(clock, async base => {
-  for(const [id,before,after,label] of [[7,'2026-12-06T20:59:59Z','2026-12-06T21:00:00Z','7 декабря'],[8,'2026-12-10T20:59:59Z','2026-12-10T21:00:00Z','11 декабря'],[9,'2026-12-14T20:59:59Z','2026-12-14T21:00:00Z','15 декабря'],[10,'2026-12-17T20:59:59Z','2026-12-17T21:00:00Z','18 декабря'],[11,'2026-12-28T20:59:59Z','2026-12-28T21:00:00Z','29 декабря']]) {
-   clock.current=before;const {windows}=await (await fetch(base+'/api/windows')).json();assert.equal(windows[id-1].available,false);assert.equal(windows[id-1].unlockLabel,label);assert.equal((await fetch(base+`/api/windows/${id}/story`)).status,423);
-   clock.current=after;assert.equal((await fetch(base+`/api/windows/${id}/story`)).status,200);
-  }
+  const entries=[[6,'2026-12-06','7 декабря'],[7,'2026-12-10','11 декабря'],[8,'2026-12-14','15 декабря'],[9,'2026-12-17','18 декабря'],[10,'2026-12-19','20 декабря'],[12,'2026-12-27','28 декабря'],[11,'2026-12-28','29 декабря'],[13,'2026-12-30','31 декабря'],[14,'2026-12-31','1 января']];
+  for(const [id,day,label] of entries){clock.current=day+'T20:59:59Z';const {windows}=await (await fetch(base+'/api/windows')).json();assert.equal(windows[id-1].available,false);assert.equal(windows[id-1].unlockLabel,label);assert.equal((await fetch(base+`/api/windows/${id}/story`)).status,423);clock.current=day+'T21:00:00Z';assert.equal((await fetch(base+`/api/windows/${id}/story`)).status,200)}
  });
 });

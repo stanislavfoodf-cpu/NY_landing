@@ -429,7 +429,7 @@ footer div{flex-wrap:wrap}
 .dialog :is(button,a):focus-visible{filter:brightness(1.25);text-decoration:underline;text-underline-offset:3px}
 .dialog input[type=radio]:focus-visible{background-color:#ffffff55}
 .dialog input[type=checkbox]:focus-visible{background-color:#ffffff55}
-.letter-dialog .email-field:has(input:focus-visible) span{text-decoration:underline;text-underline-offset:4px}
+.letter-dialog .email-field:has(input:focus-visible){background-color:#ffffff70}
 .letter-dialog textarea:focus-visible{background:#fff}
 @media(min-width:701px){.letter-dialog .letter-hint{font-size:clamp(18px,1.55vw,22px)}}
 @media(max-width:390px){
@@ -480,3 +480,9 @@ footer .footer-promo__action a{padding:16px 20px;border:2px solid white;border-r
 
 /* Правая колонка повторяет положение окон на фасаде. */
 .window:nth-child(4),.window:nth-child(8),.window:nth-child(11),.window:nth-child(14){transform:translateX(8%)}
+
+.letter-dialog .email-field input,.letter-dialog .email-field input:-webkit-autofill,.letter-dialog .email-field input:-webkit-autofill:hover,.letter-dialog .email-field input:-webkit-autofill:focus{color:#fff;-webkit-text-fill-color:#fff;caret-color:#fff}
+.letter-dialog .email-field input::placeholder{color:#dce1f2;-webkit-text-fill-color:#dce1f2;opacity:1}
+.letter-dialog button[type=submit].is-loading::after{content:'';display:inline-block;width:.7em;height:.7em;margin-left:.5em;border:2px solid #ffffff66;border-top-color:#fff;border-radius:50%;vertical-align:middle;animation:letter-spinner .8s linear infinite}
+@keyframes letter-spinner{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.letter-dialog button[type=submit].is-loading::after{animation:none}}
