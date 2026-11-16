@@ -186,19 +186,12 @@ test('MP4 responses support byte ranges needed for video playback and seeking', 
   } finally { await rm(folder,{recursive:true,force:true}); }
 });
 
-test('windows without a release date remain locked', async () => {
-  const clock={current:'2026-11-13T12:00:00Z'};
-  await withServer(clock, async base => {
-    for (const time of ['2026-11-13T12:00:00Z','2028-01-02T12:00:00Z']) {
-      clock.current=time;
-      const {windows}=await (await fetch(base+'/api/windows')).json();
-      for (const id of [7,8,9,10,11]) {
-        assert.equal(windows[id-1].available,false);
-        assert.equal(windows[id-1].unlockLabel,null);
-        const response=await fetch(base+`/api/windows/${id}/story`);
-        assert.equal(response.status,423);
-        assert.deepEqual(await response.json(),{error:'locked',unlockDate:null,unlockLabel:null});
-      }
-    }
-  });
+test('five additional windows unlock on their specified Moscow dates', async () => {
+ const clock={current:'2026-11-16T00:00:00Z'};
+ await withServer(clock, async base => {
+  for(const [id,before,after,label] of [[7,'2026-12-06T20:59:59Z','2026-12-06T21:00:00Z','7 декабря'],[8,'2026-12-10T20:59:59Z','2026-12-10T21:00:00Z','11 декабря'],[9,'2026-12-14T20:59:59Z','2026-12-14T21:00:00Z','15 декабря'],[10,'2026-12-17T20:59:59Z','2026-12-17T21:00:00Z','18 декабря'],[11,'2026-12-28T20:59:59Z','2026-12-28T21:00:00Z','29 декабря']]) {
+   clock.current=before;const {windows}=await (await fetch(base+'/api/windows')).json();assert.equal(windows[id-1].available,false);assert.equal(windows[id-1].unlockLabel,label);assert.equal((await fetch(base+`/api/windows/${id}/story`)).status,423);
+   clock.current=after;assert.equal((await fetch(base+`/api/windows/${id}/story`)).status,200);
+  }
+ });
 });
