@@ -21,14 +21,17 @@ const stories = [
   ['Конец декабря', 'Вы дожили до конца декабря. Уже достижение.', '', '2026-12-28', '28 декабря'],
   ['31 декабря', 'Ну всё. Погнали.', '', '2026-12-31', '31 декабря'],
   ['1 января', 'Доброе утро. Мы всё ещё с вами.', 'С Новым годом. Теперь можно выдохнуть.', '2027-01-01', '1 января'],
-];
+].map((story, index) => {
+  const releaseDates = {7:['2026-12-07','7 декабря'],8:['2026-12-11','11 декабря'],9:['2026-12-15','15 декабря'],10:['2026-12-18','18 декабря'],11:['2026-12-29','29 декабря']};
+  const release = releaseDates[index + 1];
+  return release ? [story[0], story[1], story[2] || '', ...release] : story;
+});
 
 const projectRoot = dirname(fileURLToPath(import.meta.url));
 const exposedFiles = new Set(['index.html', 'robots.txt', 'src/app.js', 'src/loader.js', 'src/styles.css']);
 const mime = { '.html':'text/html; charset=utf-8', '.txt':'text/plain; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.svg':'image/svg+xml', '.png':'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.gif':'image/gif', '.webp':'image/webp', '.mp4':'video/mp4', '.ttf':'font/ttf', '.woff':'font/woff', '.woff2':'font/woff2' };
 const moscowFormatter = new Intl.DateTimeFormat('en-CA', {timeZone:'Europe/Moscow', year:'numeric', month:'2-digit', day:'2-digit'});
-const undatedLockedWindows = new Set([7, 8, 9, 10, 11]);
-const available = (story, date) => !undatedLockedWindows.has(stories.indexOf(story) + 1) && (!story[3] || date >= story[3]);
+const available = (story, date) => !story[3] || date >= story[3];
 const compressible = new Set(['.html', '.js', '.css', '.svg']);
 const immutableAsset = (path) => /[.-][a-f0-9]{8,64}\.[^.]+$/i.test(basename(path));
 
