@@ -477,3 +477,6 @@ footer .footer-promo__action a{padding:16px 20px;border:1px solid #b7d3ff;border
 .window.locked span{position:absolute;top:50%;left:0;width:100%;transform:translateY(-21px);opacity:.75}
 .quiz-result .result-label{visibility:hidden}
 @media(max-width:700px){.quiz-result{border:1px solid #c9dafa;border-radius:10cqw;box-shadow:0 0 20px 5px #c3d6ffb3}.quiz-result .modal-garland{display:none}.quiz-result .result-art img{box-shadow:0 0 20px 4px #c3d6ff99}}
+
+/* Правая колонка повторяет положение окон на фасаде. */
+.window:nth-child(4),.window:nth-child(8),.window:nth-child(11),.window:nth-child(14){transform:translateX(8%)}
