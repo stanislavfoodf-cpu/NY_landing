@@ -1,0 +1,12 @@
+{
+  "name": "secret-kitchen-new-year",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/domain.test.mjs tests/server.test.mjs",
+    "build": "node tests/build.mjs",
+    "start": "node server.mjs",
+    "test:e2e": "node tests/e2e.mjs"
+  }
+}
