@@ -466,9 +466,12 @@ body.modal-open .scroll-to-cards{visibility:hidden}
 footer .footer-promo>div{display:block;margin:0}
 .footer-promo h2{font-size:clamp(30px,2.2vw,40px);line-height:1.05}
 .footer-promo p{font-size:22px;line-height:1.3;margin:12px 0 0}
+.footer-promo__action{text-align:center}
 .footer-promo__action img{display:block;width:min(100%,270px);height:auto;margin:0 auto 20px}
-footer .footer-promo__action a{padding:16px 20px;border:2px solid white;border-radius:40px;background:transparent;box-shadow:none;color:#fff;font-size:23px;font-weight:700}
-@media(max-width:600px){.footer-promo{grid-template-columns:1fr;gap:24px;text-align:center;padding:28px 22px}.footer-promo h2{font-size:32px}.footer-promo p{font-size:19px}.footer-promo__action img{width:min(100%,240px)}footer .footer-promo__action a{font-size:19px;padding:14px 16px}}
+footer .footer-promo__action a{display:inline-flex;max-width:100%;padding:10px 28px;border:2px solid white;border-radius:40px;background:transparent;box-shadow:none;color:#fff;font-size:16px;font-weight:700}
+@media(max-width:600px){.footer-promo{grid-template-columns:1fr;gap:24px;text-align:center;padding:28px 22px}.footer-promo h2{font-size:32px}.footer-promo p{font-size:19px}.footer-promo__action img{width:min(100%,240px)}}
+
+@media(max-width:700px){footer .footer-promo__action a{font-size:clamp(15px,4vw,20px);padding:8px 22px}}
 
 .goat .goat-promo{display:inline;margin:0;font-weight:700;text-decoration:underline}
 .goat .goat-terms{display:block;margin-top:.9em;font-size:.65em;line-height:1.3}
